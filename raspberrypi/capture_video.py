@@ -41,7 +41,7 @@ class VideoCapture:
         # show your video and save
         while self.cap.isOpened():
             now = time.clock()
-            if ret is True and (int(now - start) < 300):
+            if ret is True and (int(now - start) < 5):
                 out.write(frame)
                 # cv2.imshow("My Capture",frame)
                 # # 实现按下“q”键退出程序
