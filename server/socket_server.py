@@ -14,11 +14,12 @@ class MyRequestHandler(socketserver.BaseRequestHandler):
         print('connected from:', self.client_address)
         while True:
             # 定义文件信息。128s表示文件名为128bytes长，l表示一个int或log文件类型，在此为文件大小
-            fileinfo_size = struct.calcsize('128sl')
+            fileinfo_size = struct.calcsize('128s64s')
             self.buf = self.request.recv(fileinfo_size)
             if self.buf:  # 如果不加这个if，第一个文件传输完成后会自动走到下一句
                 self.filename, self.filesize = struct.unpack(
-                    '128sl', self.buf)  # 根据128sl解包文件信息，与client端的打包规则相同
+                    '128s64s', self.buf)  # 根据128sl解包文件信息，与client端的打包规则相同
+                self.filesize = int(self.filesize)
                 # 文件名长度为128，大于文件名实际长度
                 print('filesize is: ', self.filesize, 'filename size is: ', len(self.filename))
                 self.filenewname = os.path.join(
