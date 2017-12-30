@@ -10,9 +10,6 @@ ADDR = (host, port)
 
 #todo 把文件名放进队列，用循环遍历函数去推流
 class MyRequestHandler(socketserver.BaseRequestHandler):
-    def __init__(self,  request, client_address, server):
-        socketserver.BaseRequestHandler.__init__(self,request, client_address, server)
-
     def handle(self):
         print('connected from:', self.client_address)
         while True:
