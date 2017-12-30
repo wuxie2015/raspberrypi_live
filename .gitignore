@@ -1,3 +1,5 @@
 .idea/*
 setting.py
 workspace.xml
+*.avi
+*.pyc
