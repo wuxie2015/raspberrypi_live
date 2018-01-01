@@ -1,7 +1,10 @@
 # -*- coding: utf-8 -*-
 import os
 import shutil
-from server.rabbitmq import consumer
+try:
+    from server.rabbitmq_util import consumer
+except ModuleNotFoundError:
+    from rabbitmq_util import consumer
 
 def scan_file(path):
     f_name_list = os.listdir(path)

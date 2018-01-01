@@ -1,5 +1,8 @@
 #-*- coding: UTF-8 -*-
-from server.rabbitmq import producer
+try:
+    from server.rabbitmq_util import producer
+except ModuleNotFoundError:
+    from rabbitmq_util import producer
 import socketserver
 import struct
 import os
