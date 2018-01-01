@@ -24,8 +24,12 @@ class MyRequestHandler(socketserver.BaseRequestHandler):
                 self.filesize = int(self.filesize)
                 # 文件名长度为128，大于文件名实际长度
                 print('filesize is: ', self.filesize, 'filename size is: ', len(self.filename))
-                self.filenewname = os.path.join(
+                try:
+                    self.filenewname = os.path.join(
                     '/usr/local/project/tmp_video/', ('new_' + self.filename.decode('utf8')).strip('\00').strip('\\x00'))  # 使用strip()删除打包时附加的多余空字符
+                except Exception as e:
+                    print(e)
+                    print(self.filename)
                 # self.mq_obj.put_message(self.filenewname)
                 print(self.filenewname, type(self.filenewname))
                 recvd_size = 0  # 定义接收了的文件大小
