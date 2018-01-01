@@ -30,12 +30,13 @@ class MyRequestHandler(socketserver.BaseRequestHandler):
                 except Exception as e:
                     print(e)
                     print(self.filename)
+                    break#出现错误宁愿丢弃文件也不能影响程序运行
                 # self.mq_obj.put_message(self.filenewname)
                 print(self.filenewname, type(self.filenewname))
                 recvd_size = 0  # 定义接收了的文件大小
                 file = open(self.filenewname, 'wb')
                 print('stat receiving...')
-                while not recvd_size == self.filesize:
+                while not recvd_size == self.filesize:#todo 文件名无法解析 我才是因为这一块计数有问题，或者发送方和接收方的速率不一致
                     if self.filesize - recvd_size > 1024:
                         rdata = self.request.recv(1024)
                         recvd_size += len(rdata)
