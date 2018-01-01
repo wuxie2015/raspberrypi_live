@@ -19,8 +19,12 @@ class MyRequestHandler(socketserver.BaseRequestHandler):
             fileinfo_size = struct.calcsize('128sI')
             self.buf = self.request.recv(fileinfo_size)
             if self.buf:  # 如果不加这个if，第一个文件传输完成后会自动走到下一句
-                self.filename, self.filesize = struct.unpack(
-                    '128sI', self.buf)  # 根据128sl解包文件信息，与client端的打包规则相同
+                try:
+                    self.filename, self.filesize = struct.unpack(
+                        '128sI', self.buf)  # 根据128sl解包文件信息，与client端的打包规则相同
+                except struct.error as e:
+                    print(e)
+                    continue
                 self.filesize = int(self.filesize)
                 # 文件名长度为128，大于文件名实际长度
                 print('filesize is: ', self.filesize, 'filename size is: ', len(self.filename))
