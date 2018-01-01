@@ -21,14 +21,12 @@ def scan_file(path):
 
 def scan_queue_file(ch, method, properties, body):
     f_name = body
-    f_name_split = f_name.split('.')
-    extension = f_name_split[-1]
-    if extension == 'avi':
-        file_path = f_name
-        print(file_path)
-        # os.system(
-        #     "ffmpeg -re -i %s -vcodec libx264 -acodec copy -f flv -y rtmp://118.126.65.199:1935/live/livestream;" % file_path)
-        shutil.move(file_path, str(file_path) + '.bak')
+    file_path = str(f_name)
+    print(file_path)
+    # os.system(
+    #     "ffmpeg -re -i %s -vcodec libx264 -acodec copy -f flv -y rtmp://118.126.65.199:1935/live/livestream;" % file_path)
+    shutil.move(file_path, str(file_path) + '.bak')
+
 
 if __name__ == '__main__':
     # while True:
