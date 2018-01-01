@@ -47,6 +47,7 @@ class MyRequestHandler(socketserver.BaseRequestHandler):
                     else:
                         rdata = self.request.recv(self.filesize - recvd_size)
                         recvd_size = self.filesize
+                        recvd_size += len(rdata)
                     file.write(rdata)
                 file.close()
                 print('receive done')
