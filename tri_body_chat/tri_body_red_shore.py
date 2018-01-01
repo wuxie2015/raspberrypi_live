@@ -14,7 +14,7 @@ class ChatServer(threading.Thread):
         self.serverSocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.serverSocket.bind(('', port))
         self.serverSocket.listen(5)
-        print "server wait for connect...."
+        print("server wait for connect....")
         self.socketsMap = {}  # socket session字典 id : socket
         self.idMap = {} #socket session 字典 socket:id
         CONNECTION_LIST.append(self.serverSocket)
@@ -29,13 +29,13 @@ class ChatServer(threading.Thread):
         try:
             id = login_data.split('||')[0]
             password = login_data.split('||')[1]
-        except IndexError, e:
-            print login_data
-            print e
+        except IndexError as e:
+            print(login_data)
+            print(e)
         else:
             auth_result = self.auth(password)
             if auth_result == 0:
-                print "%s login"%id
+                print("%s login"%id)
                 self.socketsMap[id] = sock
                 self.idMap[sock] = id
                 sock.send('hello %s,you login successed'%id)
@@ -47,23 +47,23 @@ class ChatServer(threading.Thread):
         try:
             data = sock.recv(inBufSize)
         except Exception:
-            print "sender is offline"
+            print("sender is offline")
             sock.close()
         else:
             if data == '':
                 sender_id = self.idMap[sock]
-                print "%s is offline"%sender_id
+                print("%s is offline"%sender_id)
                 CONNECTION_LIST.remove(sock)
                 sock.close()
                 return 0
             try:
                 remote_id = data.split('||')[0]
                 message = data.split('||')[1]
-            except IndexError,e:
-                print data
-                print e
+            except IndexError as e:
+                print(data)
+                print(e)
             else:
-                print "id = %s,message = %s"%(remote_id,message)
+                print("id = %s,message = %s"%(remote_id,message))
                 local_id = self.idMap[sock]
                 if remote_id == 'all':
                     self.broadcast(local_id,message)
@@ -80,8 +80,8 @@ class ChatServer(threading.Thread):
             message_send = "%s said : %s" % (local_id, message)
             try:
                 remote_socket.sendall(message_send)
-            except Exception,e:
-                print e
+            except Exception as e:
+                print(e)
                 remote_socket.close()
                 CONNECTION_LIST.remove(remote_socket)
 
@@ -93,8 +93,8 @@ class ChatServer(threading.Thread):
                 try:
                     message_send = "%s said : %s" % (local_id, message)
                     sock.send(message_send)
-                except Exception,e:
-                    print e
+                except Exception as e:
+                    print(e)
                     sock.close()
                     CONNECTION_LIST.remove(sock)
                     continue

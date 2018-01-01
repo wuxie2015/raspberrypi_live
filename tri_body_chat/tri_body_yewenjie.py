@@ -16,11 +16,11 @@ class ChatClient:
         try:
             self.client_socket.connect((HOST, PORT))
             self.client_socket.send("%s||%s"%(self.id,self.password))
-        except Exception,e:
-            print 'Unable to connect because of %s'%e
+        except Exception as e:
+            print('Unable to connect because of %s'%e)
             sys.exit()
         else:
-            print 'Connected to remote host. Start sending messages'
+            print('Connected to remote host. Start sending messages')
             self.prompt()
 
 
@@ -37,7 +37,7 @@ class ChatClient:
                 if sock == self.client_socket:
                     data = sock.recv(4096)
                     if not data:
-                        print '\nDisconnected from chat server'
+                        print('\nDisconnected from chat server')
                         sys.exit()
                     else:
                         # print data
@@ -47,7 +47,7 @@ class ChatClient:
                 # user entered a message
                 else:
                     msg = sys.stdin.readline()
-                    remote_id = raw_input("Please input remote id:")
+                    remote_id = input("Please input remote id:")
                     msg_send = "%s||%s"%(remote_id,msg)
                     self.client_socket.send(msg_send)
                     self.prompt()

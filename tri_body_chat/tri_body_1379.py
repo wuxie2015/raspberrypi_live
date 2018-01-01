@@ -1,5 +1,5 @@
 # -*- coding:utf-8 -*-
-from tri_body_yewenjie import ChatClient
+from tri_body_chat.tri_body_yewenjie import ChatClient
 
 class ChatTest:
     def __init__(self):

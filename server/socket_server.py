@@ -8,7 +8,7 @@ host = '0.0.0.0'
 port = 12306
 ADDR = (host, port)
 
-#todo 把文件名放进队列，用循环遍历函数去推流
+#todo 把文件名放进队列，用循环遍历函数去推流，可以用多继承来完成
 class MyRequestHandler(socketserver.BaseRequestHandler):
     def handle(self):
         print('connected from:', self.client_address)

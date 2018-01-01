@@ -15,18 +15,18 @@ class SocketClient:
     def connect(self):
         try:
             self.client_socket.connect((self.remote_ip, self.port))
-        except Exception,e:
-            print 'Unable to connect because of %s'%e
+        except Exception as e:
+            print('Unable to connect because of %s'%e)
         else:
-            print 'Connected to remote host. Start sending messages'
+            print('Connected to remote host. Start sending messages')
 
     def sendf(self,file_path):
         if os.path.isfile(file_path):
             fileinfo_size = struct.calcsize('128sI')  # 定义打包规则
             # 定义文件头信息，包含文件名和文件大小
-            print(file_path)
+            # print(file_path)
             fhead = struct.pack('128sI', str(os.path.basename(file_path)), os.stat(file_path).st_size)
-            print(len(fhead))
+            # print(len(fhead))
             self.client_socket.send(fhead)
             # with open(filepath,'rb') as fo: 这样发送文件有问题，发送完成后还会发一些东西过去
             fo = open(file_path, 'rb')
