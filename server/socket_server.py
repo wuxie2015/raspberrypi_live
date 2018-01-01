@@ -12,11 +12,12 @@ ADDR = (host, port)
 
 #todo 把文件名放进队列，用循环遍历函数去推流，可以用多继承来完成
 class MyRequestHandler(socketserver.BaseRequestHandler):
-    def __init__(self, request, client_address, server):
-        socketserver.BaseRequestHandler.__init__(self, request, client_address, server)
-        self.mq_obj = producer.mq_producer()
+    # def __init__(self, request, client_address, server):
+    #     socketserver.BaseRequestHandler.__init__(self, request, client_address, server)
+    #     self.mq_obj = producer.mq_producer()
 
     def handle(self):
+        self.mq_obj = producer.mq_producer()
         print('connected from:', self.client_address)
         while True:
             # 定义文件信息。128s表示文件名为128bytes长，l表示一个int或log文件类型，在此为文件大小
