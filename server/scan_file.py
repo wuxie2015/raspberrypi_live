@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import os
 import shutil
-from .rabbitmq import consumer
+from server.rabbitmq import consumer
 
 def scan_file(path):
     f_name_list = os.listdir(path)

@@ -1,5 +1,5 @@
 #-*- coding: UTF-8 -*-
-from .rabbitmq import producer
+from server.rabbitmq import producer
 import socketserver
 import struct
 import os
