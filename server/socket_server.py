@@ -1,6 +1,5 @@
 #-*- coding: UTF-8 -*-
-import socket
-import time
+from .rabbitmq import producer
 import socketserver
 import struct
 import os
@@ -10,6 +9,10 @@ ADDR = (host, port)
 
 #todo 把文件名放进队列，用循环遍历函数去推流，可以用多继承来完成
 class MyRequestHandler(socketserver.BaseRequestHandler):
+    def __init__(self, request, client_address, server):
+        socketserver.BaseRequestHandler.__init__(self, request, client_address, server)
+        self.mq_obj = producer.mq_producer()
+
     def handle(self):
         print('connected from:', self.client_address)
         while True:
@@ -24,6 +27,7 @@ class MyRequestHandler(socketserver.BaseRequestHandler):
                 print('filesize is: ', self.filesize, 'filename size is: ', len(self.filename))
                 self.filenewname = os.path.join(
                     '/usr/local/project/tmp_video/', ('new_' + self.filename.decode('utf8')).strip('\00').strip('\\x00'))  # 使用strip()删除打包时附加的多余空字符
+                self.mq_obj.put_message(self.filenewname)
                 print(self.filenewname, type(self.filenewname))
                 recvd_size = 0  # 定义接收了的文件大小
                 file = open(self.filenewname, 'wb')
