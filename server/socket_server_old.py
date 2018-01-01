@@ -30,7 +30,7 @@ class MyRequestHandler(socketserver.BaseRequestHandler):
                 except Exception as e:
                     print(e)
                     print(self.filename)
-                    break#出现错误宁愿丢弃文件也不能影响程序运行
+                    continue#出现错误宁愿丢弃文件也不能影响程序运行
                 # self.mq_obj.put_message(self.filenewname)
                 print(self.filenewname, type(self.filenewname))
                 recvd_size = 0  # 定义接收了的文件大小
