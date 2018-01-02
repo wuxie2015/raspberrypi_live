@@ -4,3 +4,5 @@ workspace.xml
 *.xml
 *.avi
 *.pyc
+server/test_file/*
+server/test_file
