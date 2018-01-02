@@ -2,9 +2,18 @@
 import socketserver
 import struct
 import os
+import hashlib
+
 host = '0.0.0.0'
 port = 12306
 ADDR = (host, port)
+
+def calc_md5(f_name):
+    with open(f_name, 'rb') as fr:
+        md5 = hashlib.md5()
+        md5.update(fr.read())
+        md5 = md5.hexdigest()
+    return md5
 
 class MyRequestHandler(socketserver.BaseRequestHandler):
     # def __init__(self, request, client_address, server):
@@ -16,17 +25,19 @@ class MyRequestHandler(socketserver.BaseRequestHandler):
         print('connected from:', self.client_address)
         while True:
             # 定义文件信息。128s表示文件名为128bytes长，l表示一个int或log文件类型，在此为文件大小
-            fileinfo_size = struct.calcsize('128sI')
+            fileinfo_size = struct.calcsize('128sII32s')
             self.buf = self.request.recv(fileinfo_size)
             if self.buf:  # 如果不加这个if，第一个文件传输完成后会自动走到下一句
                 try:
-                    self.filename, self.filesize = struct.unpack(
-                        '128sI', self.buf)  # 根据128sl解包文件信息，与client端的打包规则相同
+                    self.filename, self.filenamesize, self.filesize,self.md5 = struct.unpack(
+                        '128sII32s', self.buf)  # 根据128sII32s解包文件信息，与client端的打包规则相同
                 except struct.error as e:
                     print(e)
                     continue
                 self.filesize = int(self.filesize)
                 # 文件名长度为128，大于文件名实际长度
+                self.filename = self.filename[:self.filenamesize]
+                self.md5 = self.md5.decode('utf8')
                 print('filesize is: ', self.filesize, 'filename size is: ', len(self.filename))
                 try:
                     self.filenewname = os.path.join(
@@ -47,10 +58,13 @@ class MyRequestHandler(socketserver.BaseRequestHandler):
                     else:
                         rdata = self.request.recv(self.filesize - recvd_size)
                         recvd_size = self.filesize
-                        recvd_size += len(rdata)
                     file.write(rdata)
                 file.close()
-                print('receive done')
+                md5_recv = calc_md5(self.filenewname)
+                if md5_recv == self.md5:
+                    print('receive done')
+                else:
+                    print('md5 do not match')
         # self.request.close()
 
 
