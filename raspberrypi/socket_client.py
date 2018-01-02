@@ -1,10 +1,11 @@
+
 # -*- coding: utf-8 -*-
 import os
 import socket
 import struct
 try:
     from raspberrypi.setting import HOST,PORT
-except ModuleNotFoundError:
+except Exception:
     from setting import HOST,PORT
 import hashlib
 
