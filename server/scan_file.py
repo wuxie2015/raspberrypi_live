@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import os
 import shutil
+import subprocess
 try:
     from server.rabbitmq_util import consumer
 except ModuleNotFoundError:
@@ -23,6 +24,8 @@ def scan_queue_file(ch, method, properties, body):
     f_name = body
     file_path = str(f_name.decode('utf8'))
     print(file_path)
+    subprocess.call("ffmpeg -re -i %s -vcodec libx264 -acodec copy -f flv -y rtmp://118.126.65.199:1935/live/livestream;" % file_path,
+                    stdout=subprocess.PIPE,shell=True)
     # os.system(
     #     "ffmpeg -re -i %s -vcodec libx264 -acodec copy -f flv -y rtmp://118.126.65.199:1935/live/livestream;" % file_path)
     shutil.move(file_path, str(file_path) + '.bak')
