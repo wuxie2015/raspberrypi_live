@@ -1,8 +1,8 @@
 #-*- coding: UTF-8 -*-
 import threading
-from server.socket_server import MyRequestHandler
-from server.scan_file import scan_queue_file
-from server.rabbitmq_util import consumer
+from socket_server import MyRequestHandler
+from scan_file import scan_queue_file
+from rabbitmq_util import consumer
 import socketserver
 
 host = '0.0.0.0'
