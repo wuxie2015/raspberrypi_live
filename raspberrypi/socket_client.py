@@ -54,6 +54,8 @@ class SocketClient:
                 fo.close()
         except Exception as e:
             print(e)
+            del self.client_socket
+            self.connect()
 
 if __name__ == '__main__':
     sc_obj = SocketClient(HOST,PORT)
