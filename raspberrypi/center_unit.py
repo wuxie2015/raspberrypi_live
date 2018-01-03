@@ -101,9 +101,14 @@ class PushStream(threading.Thread):
                 while not self.queue.empty():
                     file_path = self.queue.get()
                     self.socket_client.sendf(file_path)
-                    # os.system(
-                    #     "ffmpeg -re -i %s -vcodec libx264 -acodec copy -f flv -y rtmp://118.126.65.199:1935/live/livestream;" % file_path)
-                    os.remove(file_path)
+                    try:
+                        os.system('rm -rf %s'%file_path)
+                    except Exception as e:
+                        print(e)
+                        try:
+                            os.remove(file_path)
+                        except Exception as e:
+                            print(e)
 
     def stop(self):
         self.stopped = True
