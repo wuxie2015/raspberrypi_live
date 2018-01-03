@@ -41,24 +41,24 @@ class MyRequestHandler(socketserver.BaseRequestHandler):
                 except struct.error as e:
                     print(e)
                     continue
-                self.filesize = int(self.filesize)
-                # 文件名长度为128，大于文件名实际长度
-                self.filename = self.filename[:self.filenamesize]
-                self.md5 = self.md5.decode('utf8')
-                print('filesize is: ', self.filesize, 'filename size is: ', len(self.filename))
                 try:
+                    self.filesize = int(self.filesize)
+                    # 文件名长度为128，大于文件名实际长度
+                    self.filename = self.filename[:self.filenamesize]
+                    self.md5 = self.md5.decode('utf8')
+                    print('filesize is: ', self.filesize, 'filename size is: ', len(self.filename))
                     self.filenewname = os.path.join(
                     '/usr/local/project/tmp_video/', ('new_' + self.filename.decode('utf8')).strip('\00').strip('\\x00'))  # 使用strip()删除打包时附加的多余空字符
                 except Exception as e:
                     print(e)
-                    print(self.filename)
+                    print("error in %s"%self.filename)
                     continue#出现错误宁愿丢弃文件也不能影响程序运行
                 # self.mq_obj.put_message(self.filenewname)
-                print(self.filenewname, type(self.filenewname))
+                print("ready to receive %s"%self.filenewname)
                 recvd_size = 0  # 定义接收了的文件大小
                 file = open(self.filenewname, 'wb')
                 print('stat receiving...')
-                while not recvd_size == self.filesize:#todo 文件名无法解析 我才是因为这一块计数有问题，或者发送方和接收方的速率不一致
+                while not recvd_size == self.filesize:
                     if self.filesize - recvd_size > 1024:
                         rdata = self.request.recv(1024)
                         recvd_size += len(rdata)
