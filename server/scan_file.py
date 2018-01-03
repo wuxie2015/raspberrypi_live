@@ -34,5 +34,6 @@ def scan_queue_file(ch, method, properties, body):
 if __name__ == '__main__':
     # while True:
     #     scan_file('/usr/local/project/tmp_video/')
+    #rabbitmq去掉heartbeat,在rabbitmq的var/log中找到第一行写着conf地址，在配置文件加入 [     {rabbit, [{heartbeat, [0]}]}   ].
     mq_obj = consumer.mq_consumer()
     mq_obj.init_consumer(scan_queue_file)

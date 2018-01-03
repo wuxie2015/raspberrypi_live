@@ -12,7 +12,8 @@ def scan_file(path):
             extension = f_name_split[-1]
             if extension == 'avi':
                 file_path = os.path.join(path,f_name)
-                os.system("/usr/local/project/simple_rtmp_server/srs/trunk/objs/ffmpeg/bin/ffmpeg -re -i %s -vcodec libx264 -acodec copy -f flv -y rtmp://118.126.65.199:1935/live/livestream;" % file_path)
+                subprocess.call("ffmpeg -re -i %s -vcodec libx264 -acodec copy -f flv -y rtmp://118.126.65.199:1935/live/livestream;" % file_path,
+                    stdout=subprocess.PIPE,shell=True)
                 shutil.move(file_path,str(file_path)+'.bak')
                 # os.remove(file_path)
 

@@ -4,7 +4,9 @@ import pika
 class mq_producer:
     def __init__(self):
         credentials = pika.PlainCredentials('admin', '123456')
-        self.connection = pika.BlockingConnection(pika.ConnectionParameters('127.0.0.1', 5672, '/', credentials))
+        self.connection = pika.BlockingConnection(pika.ConnectionParameters(host = '127.0.0.1', port = 5672,
+                                                                            virtual_host = '/', credentials =credentials,
+                                                                            heartbeat = 0))
         self.channel = self.connection.channel()
         self.channel.queue_declare(queue='file_queue')
 
