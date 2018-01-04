@@ -28,6 +28,7 @@ class SocketClient:
     def close(self):
         try:
             self.client_socket.close()
+            del self.client_socket
         except Exception as e:
             print('Unable to connect because of %s'%e)
         else:
@@ -62,7 +63,7 @@ class SocketClient:
                         break
                     self.client_socket.send(filedata)
                 fo.close()
-                # self.close()
+                self.close()
                 print('send file %s finished'%file_path)
         except Exception as e:
             print(e)
