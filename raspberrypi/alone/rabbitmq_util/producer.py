@@ -4,7 +4,7 @@ import pika
 class mq_producer:
     def __init__(self):
         credentials = pika.PlainCredentials('admin', '123456')
-        self.connection = pika.BlockingConnection(pika.ConnectionParameters(host = '127.0.0.1', port = 5672,
+        self.connection = pika.BlockingConnection(pika.ConnectionParameters(host = '118.126.65.199', port = 5672,
                                                                             virtual_host = '/', credentials =credentials,
                                                                             heartbeat_interval = 0))
         self.channel = self.connection.channel()
