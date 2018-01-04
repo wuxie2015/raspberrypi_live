@@ -62,12 +62,12 @@ class SocketClient:
                         break
                     self.client_socket.send(filedata)
                 fo.close()
-                self.close()
+                # self.close()
                 print('send file %s finished'%file_path)
         except Exception as e:
             print(e)
             print('reconnect now')
-            self.close()
+            # self.close()
             print('send file %s failed' % file_path)
 
 if __name__ == '__main__':
