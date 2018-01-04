@@ -1,11 +1,11 @@
-
 # -*- coding: utf-8 -*-
 import os
 import socket
 import struct
+from optparse import OptionParser
 try:
     from raspberrypi.setting import HOST,PORT
-except Exception:
+except ModuleNotFoundError:
     from setting import HOST,PORT
 import hashlib
 
@@ -54,4 +54,8 @@ class SocketClient:
 
 if __name__ == '__main__':
     sc_obj = SocketClient(HOST,PORT)
-    sc_obj.sendf('output.avi')
+    parser = OptionParser()
+    parser.add_option("-f", "--file", dest="file", help="File", metavar="File")
+    (options, args) = parser.parse_args()
+    file = options.file
+    sc_obj.sendf(file)

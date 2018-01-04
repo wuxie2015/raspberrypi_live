@@ -53,13 +53,10 @@ class MyRequestHandler(socketserver.BaseRequestHandler):
                     print(e)
                     print("error in %s"%self.filename)
                     recvd_size = 0
-                    while not recvd_size == self.filesize:
-                        if self.filesize - recvd_size > 1024:
-                            rdata = self.request.recv(1024)
-                            recvd_size += len(rdata)
-                        else:
-                            rdata = self.request.recv(self.filesize - recvd_size)
-                            recvd_size = self.filesize
+                    while True:#清空缓冲区
+                        buf = self.request.recv(1024)
+                        if not len(buf):
+                            break
                     continue#出现错误宁愿丢弃文件也不能影响程序运行
                 # self.mq_obj.put_message(self.filenewname)
                 print("ready to receive %s"%self.filenewname)
