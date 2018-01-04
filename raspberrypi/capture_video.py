@@ -26,10 +26,7 @@ class VideoCapture:
         camera.start_recording(file_path)
         time.sleep(12)
         camera.stop_recording()
-
-
-    def end_rec(self):
-        self.cap.release()
+        camera.close()
 
 if __name__ == '__main__':
     vc_obj = VideoCapture()
