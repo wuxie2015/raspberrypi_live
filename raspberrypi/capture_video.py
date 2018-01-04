@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-import cv2
+from picamera import PiCamera
 import time
 
 
@@ -13,49 +13,20 @@ class VideoCapture:
         1,2,3,.... for other cameras
         input: nothing
         output: videocapture object'''
-        cap = cv2.VideoCapture(0)
-        return cap
-
-    def init_file(self, file_path):
-        '''select the place to save your video
-        input: video file path
-        output: VideoWriter object'''
-        try:
-            out = cv2.VideoWriter('output.avi', cv2.VideoWriter_fourcc(*'XVID'), 20.0, (640, 480))
-        except AttributeError:
-            out = cv2.VideoWriter(
-                file_path, cv2.cv.CV_FOURCC(
-                     *"XVID"), 20.0, (640, 480))
-        return out
+        camera = PiCamera()
+        camera.resolution = (640, 480)
+        camera.framerate = 26
+        return camera
 
     def captuer_video(self, file_path):
         '''capture video
         input: none
         output: none'''
-        self.cap = self.init_camera()
-        out = self.init_file(file_path)
-        # get video frame by frame
-        ret, frame = self.cap.read()
+        camera = self.init_camera()
+        camera.start_recording(file_path)
+        time.sleep(120)
+        camera.stop_recording()
 
-        start = time.clock()
-        # show your video and save
-        while self.cap.isOpened():
-            now = time.clock()
-            if ret is True and (int(now - start) < 12):
-                out.write(frame)
-                # cv2.imshow("My Capture",frame)
-                # # 实现按下“q”键退出程序
-                # if cv2.waitKey(1)&0xFF == ord('q'):
-                #     break
-            else:
-                break
-        # release device
-        # 释放摄像头资源
-        self.cap.release()
-        try:
-            cv2.destoryAllWindows()
-        except AttributeError:
-            pass
 
     def end_rec(self):
         self.cap.release()
