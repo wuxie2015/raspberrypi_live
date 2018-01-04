@@ -42,7 +42,7 @@ class MyRequestHandler(socketserver.BaseRequestHandler):
                     print(e)
                     continue
                 try:
-                    self.filesize = int(self.filesize)
+                    filesize = int(filesize)
                     # 文件名长度为128，大于文件名实际长度
                     filename = filename[:filenamesize]
                     md5 = md5.decode('utf8')
@@ -62,7 +62,7 @@ class MyRequestHandler(socketserver.BaseRequestHandler):
                     recvd_size = 0  # 定义接收了的文件大小
                     file = open(filenewname, 'wb')
                     print('start receiving...')
-                    while not recvd_size == self.filesize:
+                    while not recvd_size == filesize:
                         if filesize - recvd_size > BUFFER_SIZE:
                             rdata = self.request.recv(BUFFER_SIZE)
                             recvd_size += len(rdata)
