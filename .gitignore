@@ -8,3 +8,4 @@ workspace.xml
 *.pyc
 server/test_file/*
 server/test_file
+*.out
