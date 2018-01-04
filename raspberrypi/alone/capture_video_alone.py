@@ -1,11 +1,13 @@
 # -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 from picamera import PiCamera
 import time
-
+import os
+from rabbitmq_util import producer
 
 class VideoCapture:
     def __init__(self):
-        pass
+        self.mq_obj = producer.mq_producer()
 
     def init_camera(self):
         '''input: nothing
@@ -15,16 +17,25 @@ class VideoCapture:
         camera.framerate = 26
         return camera
 
-    def captuer_video(self, file_path):
+    def gen_file_name(self):
+        cur_time = time.strftime('%Y%m%d%H%M%S', time.localtime(time.time()))
+        file_name = "output_%s.h264" % cur_time
+        file_path = os.path.join(os.getcwd(),file_name)
+        return file_path
+
+    def captuer_video(self):
         '''capture video
         input: none
         output: none'''
         camera = self.init_camera()
+        file_path = self.gen_file_name()
         camera.start_recording(file_path)
         time.sleep(120)
         camera.stop_recording()
         camera.close()
+        self.mq_obj.put_message(file_path)
 
 if __name__ == '__main__':
     vc_obj = VideoCapture()
-    vc_obj.captuer_video('output.avi')
+    while True:
+        vc_obj.captuer_video()
