@@ -55,6 +55,8 @@ class SocketClient:
         except Exception as e:
             print(e)
             del self.client_socket
+            self.client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            self.client_socket.settimeout(2)
             self.connect()
 
 if __name__ == '__main__':
