@@ -101,7 +101,8 @@ class PushStream(threading.Thread):
             else:
                 while not self.queue.empty():
                     file_path = self.queue.get()
-                    subprocess.call("python socket_client.py -f %s"%file_path)
+                    subprocess.call("python /usr/local/project/raspberrypi_video/raspberrypi/socket_client.py -f %s"%file_path,
+                    stdout=subprocess.PIPE,shell=True)
                     try:
                         os.system('rm -rf %s'%file_path)
                         print('rm -rf %s'%file_path)
