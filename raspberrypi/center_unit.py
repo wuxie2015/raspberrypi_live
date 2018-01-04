@@ -5,6 +5,7 @@ import time
 import os
 from socket_client import SocketClient
 from setting import HOST,PORT
+import multiprocessing
 
 con = threading.Condition()
 
@@ -100,7 +101,10 @@ class PushStream(threading.Thread):
             else:
                 while not self.queue.empty():
                     file_path = self.queue.get()
-                    self.socket_client.sendf(file_path)
+                    # self.socket_client.sendf(file_path)
+                    p = multiprocessing.Process(target= self.socket_client.sendf,args=(file_path,))
+                    p.start()
+                    p.join()
                     try:
                         os.system('rm -rf %s'%file_path)
                     except Exception as e:

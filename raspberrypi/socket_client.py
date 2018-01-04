@@ -28,11 +28,10 @@ class SocketClient:
     def close(self):
         try:
             self.client_socket.close()
-            del self.client_socket
         except Exception as e:
-            print('Unable to connect because of %s'%e)
+            print('Unable to deconnect because of %s'%e)
         else:
-            print('Connected to remote host. Start sending messages')
+            print('DeConnected to remote host. Start sending messages')
 
     def calc_md5(self,f_name):
         with open(f_name, 'rb') as fr:
