@@ -24,7 +24,7 @@ class VideoCapture:
         output: none'''
         camera = self.init_camera()
         camera.start_recording(file_path)
-        time.sleep(12)
+        time.sleep(120)
         camera.stop_recording()
         camera.close()
 
