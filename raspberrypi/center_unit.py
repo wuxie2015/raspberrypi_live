@@ -63,7 +63,7 @@ class ProduceVideo(threading.Thread):
 
     def gen_file_name(self):
         cur_time = time.strftime('%Y%m%d%H%M%S', time.localtime(time.time()))
-        file_name = "output_%s.avi" % cur_time
+        file_name = "output_%s.h264" % cur_time
         file_path = os.path.join(os.getcwd(),file_name)
         return file_path
 
