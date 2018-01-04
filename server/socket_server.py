@@ -62,7 +62,7 @@ class MyRequestHandler(socketserver.BaseRequestHandler):
                 print("ready to receive %s"%self.filenewname)
                 recvd_size = 0  # 定义接收了的文件大小
                 file = open(self.filenewname, 'wb')
-                print('stat receiving...')
+                print('start receiving...')
                 while not recvd_size == self.filesize:
                     if self.filesize - recvd_size > 1024:
                         rdata = self.request.recv(1024)
