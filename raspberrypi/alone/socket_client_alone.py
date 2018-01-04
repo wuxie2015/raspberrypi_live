@@ -69,6 +69,14 @@ def sendf(ch, method, properties, body):
                 fo.close()
                 close(client_socket)
                 print('send file %s finished' % file_path)
+            try:
+                os.system('rm -rf %s' % file_path)
+            except Exception as e:
+                print(e)
+                try:
+                    os.remove(file_path)
+                except Exception as e:
+                    print(e)
     except Exception as e:
         print(e)
         print('send file %s failed' % file_path)
