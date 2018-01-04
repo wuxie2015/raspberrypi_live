@@ -64,14 +64,10 @@ class MyRequestHandler(socketserver.BaseRequestHandler):
                 recvd_size = 0  # 定义接收了的文件大小
                 file = open(filenewname, 'wb')
                 print('start receiving...')
-                while not recvd_size == filesize:
-                    if filesize - recvd_size > BUFFER_SIZE:
-                        rdata = self.request.recv(BUFFER_SIZE)
-                        recvd_size += len(rdata)
-                    else:
-                        rdata = self.request.recv(BUFFER_SIZE)
-                        # rdata = self.request.recv(filesize - recvd_size)
-                        recvd_size = filesize
+                while True:
+                    rdata = self.request.recv(BUFFER_SIZE)
+                    if len(rdata) == 0:
+                        break
                     file.write(rdata)
                 file.close()
                 md5_recv = self.calc_md5(filenewname)
