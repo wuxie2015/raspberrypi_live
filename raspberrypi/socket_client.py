@@ -25,6 +25,14 @@ class SocketClient:
         else:
             print('Connected to remote host. Start sending messages')
 
+    def close(self):
+        try:
+            self.client_socket.close()
+        except Exception as e:
+            print('Unable to connect because of %s'%e)
+        else:
+            print('Connected to remote host. Start sending messages')
+
     def calc_md5(self,f_name):
         with open(f_name, 'rb') as fr:
             md5 = hashlib.md5()
@@ -34,6 +42,7 @@ class SocketClient:
 
     def sendf(self,file_path):
         try:
+            self.connect()
             if os.path.isfile(file_path):
                 fileinfo_size = struct.calcsize('128sI')  # 定义打包规则
                 # 定义文件头信息，包含文件名和文件大小
@@ -53,14 +62,12 @@ class SocketClient:
                         break
                     self.client_socket.send(filedata)
                 fo.close()
+                self.close()
                 print('send file %s finished'%file_path)
         except Exception as e:
             print(e)
             print('reconnect now')
-            del self.client_socket
-            self.client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-            self.client_socket.settimeout(2)
-            self.connect()
+            self.close()
             print('send file %s failed' % file_path)
 
 if __name__ == '__main__':
