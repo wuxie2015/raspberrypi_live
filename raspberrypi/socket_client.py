@@ -5,7 +5,7 @@ import struct
 from optparse import OptionParser
 try:
     from raspberrypi.setting import HOST,PORT
-except ModuleNotFoundError:
+except Exception:
     from setting import HOST,PORT
 import hashlib
 
