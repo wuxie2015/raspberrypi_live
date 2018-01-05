@@ -1,10 +1,11 @@
 # !/usr/bin/env python
 import pika
+from setting import HOST,PORT
 
 class mq_consumer:
     def __init__(self):
         credentials = pika.PlainCredentials('admin', '123456')
-        self.connection = pika.BlockingConnection(pika.ConnectionParameters(host = '118.126.65.199', port = 5672,
+        self.connection = pika.BlockingConnection(pika.ConnectionParameters(host = HOST, port = 5672,
                                                                             virtual_host = 'raspberry', credentials =credentials,
                                                                             heartbeat_interval = 0))
         self.channel = self.connection.channel()
