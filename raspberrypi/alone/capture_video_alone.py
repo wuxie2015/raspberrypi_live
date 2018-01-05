@@ -4,10 +4,11 @@ from picamera import PiCamera
 import time
 import os
 from rabbitmq_util import producer
+import pika
 
 class VideoCapture:
     def __init__(self):
-        self.mq_obj = producer.mq_producer()
+        pass
 
     def init_camera(self):
         '''input: nothing
@@ -27,15 +28,20 @@ class VideoCapture:
         '''capture video
         input: none
         output: none'''
+        mq_obj = producer.mq_producer()
         camera = self.init_camera()
         file_path = self.gen_file_name()
         camera.start_recording(file_path)
         time.sleep(120)
         camera.stop_recording()
         camera.close()
-        self.mq_obj.put_message(file_path)
+        mq_obj.put_message(file_path)
+        mq_obj.close()
 
 if __name__ == '__main__':
     vc_obj = VideoCapture()
     while True:
-        vc_obj.captuer_video()
+        try:
+            vc_obj.captuer_video()
+        except Exception:
+            continue

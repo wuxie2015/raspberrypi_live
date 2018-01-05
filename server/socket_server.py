@@ -82,6 +82,7 @@ class MyRequestHandler(socketserver.BaseRequestHandler):
                 self.request.close()
                 return
         self.request.close()
+        mq_obj.close()
 
 
 tcpServ = socketserver.ThreadingTCPServer(ADDR, MyRequestHandler)

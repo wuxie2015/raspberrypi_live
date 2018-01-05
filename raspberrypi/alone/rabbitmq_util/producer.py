@@ -15,6 +15,10 @@ class mq_producer:
         self.channel.basic_publish(exchange='',
                       routing_key='file_queue',
                       body=massage)
+
+    def close(self):
+        self.channel.close()
+        self.connection.close()
 if __name__ == '__main__':
     mq_obj = mq_producer()
     mq_obj.put_message('output.avi')
