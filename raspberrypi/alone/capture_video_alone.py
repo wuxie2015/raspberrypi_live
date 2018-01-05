@@ -13,9 +13,11 @@ class VideoCapture:
     def init_camera(self):
         '''input: nothing
         output: videocapture object'''
+        brightness = os.getenv('video_brightness',70)
         camera = PiCamera()
         camera.resolution = (640, 480)
         camera.framerate = 25
+        camera.brightness = brightness
         return camera
 
     def gen_file_name(self):
