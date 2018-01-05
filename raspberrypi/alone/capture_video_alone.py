@@ -15,7 +15,7 @@ class VideoCapture:
         output: videocapture object'''
         camera = PiCamera()
         camera.resolution = (640, 480)
-        camera.framerate = 26
+        camera.framerate = 25
         return camera
 
     def gen_file_name(self):
