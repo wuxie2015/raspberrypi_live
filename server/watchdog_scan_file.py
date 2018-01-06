@@ -128,6 +128,7 @@ def watch_dog(name,run_cmd):
         log_name = name.split('.')[0] + '.log'
         ps_str = 'ps -fe |grep ' + name + ' | grep -v grep | wc -l'
         esb = os.popen(ps_str).read().strip()
+        print(esb)
         if esb == '0':
             # 重启或启动
             daemon_obj = Daemon(name, run_cmd, stdout=log_name, stderr=log_name)
