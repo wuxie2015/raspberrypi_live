@@ -15,6 +15,7 @@ class VideoCapture:
         brightness = os.getenv('video_brightness',70)
         camera = PiCamera()
         camera.resolution = (640, 480)
+        camera.rotation = 180#上下颠倒
         camera.framerate = 25
         camera.brightness = brightness
         return camera
