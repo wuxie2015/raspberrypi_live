@@ -45,5 +45,6 @@ if __name__ == '__main__':
     while True:
         try:
             vc_obj.captuer_video()
-        except Exception:
+        except Exception as e:
+            print(e)
             continue
