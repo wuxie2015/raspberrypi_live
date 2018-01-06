@@ -32,16 +32,16 @@ stop() {
     PID1=$(ps -aux|grep capture_video_alone.py|grep -v grep|awk 'NR==1 {printf $2}')
     kill -9 ${PID1}
     if [ $? -eq 0 ];then
-    echo "kill $input1 success"
+    echo "kill capture_video_alone.py success"
     else
-        echo "kill $input1 fail"
+        echo "kill capture_video_alone.py fail"
     fi
     PID2=$(ps -aux|grep socket_client_alone.py|grep -v grep|awk 'NR==1 {printf $2}')
     kill -9 ${PID2}
     if [ $? -eq 0 ];then
-    echo "kill $input1 success"
+    echo "kill socket_client_alone.py success"
     else
-        echo "kill $input1 fail"
+        echo "kill socket_client_alone.py fail"
     fi
 }
 restart() {
