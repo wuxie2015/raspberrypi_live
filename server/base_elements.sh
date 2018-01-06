@@ -36,7 +36,8 @@ stop() {
         echo "kill srs fail"
     fi
     PID2=$(ps -aux|grep rabbitmq|grep -v grep|awk 'NR==1 {printf $2}')
-    kill -9 ${PID2}
+    PID3=$(ps -aux|grep rabbitmq|grep -v grep|awk 'NR==2 {printf $2}')
+    kill -9 ${PID2} ${PID3}
     if [ $? -eq 0 ];then
     echo "kill rabbitmq success"
     else
