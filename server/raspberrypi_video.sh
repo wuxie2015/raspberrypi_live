@@ -3,9 +3,9 @@ SCAN_FILE = "/usr/local/project/raspberrypi_video/server/scan_file.py"
 
 start() {
     [ -x $nginx ] || exit 5
-    daemon $nginx -c SOCKET_SERVER
+    daemon $SOCKET_SERVER
     retval1=$?
-    daemon $nginx -c SCAN_FILE
+    daemon $SCAN_FILE
     retval2=$?
     $retval = `expr $retval1 + $retval2`
     return $retval

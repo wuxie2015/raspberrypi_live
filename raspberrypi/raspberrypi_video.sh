@@ -3,9 +3,9 @@ SOCKET_CLIENT = "/usr/local/project/raspberrypi_video/raspberrypi/alone/socket_c
 
 start() {
     [ -x $nginx ] || exit 5
-    daemon $nginx -c CAPTURE_VIDEO
+    daemon $SOCKET_CLIENT
     retval1=$?
-    daemon $nginx -c SOCKET_CLIENT
+    daemon $CAPTURE_VIDEO
     retval2=$?
     $retval = `expr $retval1 + $retval2`
     return $retval
