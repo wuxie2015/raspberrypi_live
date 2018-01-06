@@ -70,6 +70,7 @@ class Daemon(object):
             print("the deamon is already running!!!")
             return
         else:
+            print('123')
             # 启动监控
             self.daemonize()
             self.run()
