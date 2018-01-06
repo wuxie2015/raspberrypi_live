@@ -10,7 +10,23 @@ except Exception:
     from setting import HOST,PORT
 import hashlib
 from rabbitmq_util import consumer
+import logging
+from logging.handlers import RotatingFileHandler
 
+
+def logger_init():
+    # 定义一个RotatingFileHandler，最多备份5个日志文件，每个日志文件最大10M
+    log_file = 'socket_client.log'
+    Rthandler = RotatingFileHandler(log_file, maxBytes=10 * 1024 * 1024, backupCount=5)
+    Rthandler.setLevel(logging.DEBUG)
+    formatter = logging.Formatter('\n%(asctime)s   %(filename)s[line:%(lineno)d]   %(levelname)s\n%(message)s')
+    Rthandler.setFormatter(formatter)
+    logger = logging.getLogger()
+    logger.addHandler(Rthandler)
+    logger.setLevel(logging.DEBUG)
+    return logger
+
+logger = logger_init()
 
 def connect():
     remote_ip = HOST
@@ -20,10 +36,10 @@ def connect():
     try:
         client_socket.connect((remote_ip, port))
     except Exception as e:
-        print('Unable to connect because of %s' % e)
+        logger.error('Unable to connect because of %s' % e)
         return None
     else:
-        print('Connected to remote host. Start sending messages')
+        logger.info('Connected to remote host. Start sending messages')
         return client_socket
 
 
@@ -31,10 +47,10 @@ def close(client_socket):
     try:
         client_socket.close()
     except Exception as e:
-        print('Unable to deconnect because of %s' % e)
+        logger.error('Unable to deconnect because of %s' % e)
         return False
     else:
-        print('DeConnected to remote host. Start sending messages')
+        logger.info('DeConnected to remote host. Start sending messages')
         return True
 
 def calc_md5(f_name):
@@ -57,7 +73,7 @@ def sendf(ch, method, properties, body):
                 f_name_bytes = os.path.basename(file_path).encode('utf8')
                 f_name_length = len(f_name_bytes)
                 fhead = struct.pack('128sII32s', f_name_bytes, f_name_length, os.stat(file_path).st_size, md5)
-                print('start send file %s length %s md5 %s' % (file_path, os.stat(file_path).st_size, md5))
+                logger.info('start send file %s length %s md5 %s' % (file_path, os.stat(file_path).st_size, md5))
                 # fhead = struct.pack('128sI', str(os.path.basename(file_path)), os.stat(file_path).st_size)
                 client_socket.send(fhead)
                 # with open(filepath,'rb') as fo: 这样发送文件有问题，发送完成后还会发一些东西过去
@@ -69,18 +85,18 @@ def sendf(ch, method, properties, body):
                     client_socket.send(filedata)
                 fo.close()
                 close(client_socket)
-                print('send file %s finished' % file_path)
+                logger.info('send file %s finished' % file_path)
             try:
                 os.system('rm -rf %s' % file_path)
             except Exception as e:
-                print(e)
+                logger.error(e)
                 try:
                     os.remove(file_path)
                 except Exception as e:
-                    print(e)
+                    logger.error(e)
     except Exception as e:
-        print(e)
-        print('send file %s failed' % file_path)
+        logger.error(e)
+        logger.error('send file %s failed' % file_path)
 
 if __name__ == '__main__':
     mq_obj = consumer.mq_consumer()

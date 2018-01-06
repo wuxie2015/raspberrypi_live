@@ -3,11 +3,25 @@
 from picamera import PiCamera
 import time
 import os
-from rabbitmq_util import producer
+from rabbitmq_util import prsoducer
+import logging
+from logging.handlers import RotatingFileHandler
 
 class VideoCapture:
     def __init__(self):
-        pass
+        self.logger = self.logger_init()
+
+    def logger_init(self):
+        # 定义一个RotatingFileHandler，最多备份5个日志文件，每个日志文件最大10M
+        log_file = 'capture_video_alone.log'
+        Rthandler = RotatingFileHandler(log_file, maxBytes=10 * 1024 * 1024, backupCount=5)
+        Rthandler.setLevel(logging.DEBUG)
+        formatter = logging.Formatter('\n%(asctime)s   %(filename)s[line:%(lineno)d]   %(levelname)s\n%(message)s')
+        Rthandler.setFormatter(formatter)
+        logger = logging.getLogger()
+        logger.addHandler(Rthandler)
+        logger.setLevel(logging.DEBUG)
+        return logger
 
     def init_camera(self):
         '''input: nothing
@@ -30,21 +44,22 @@ class VideoCapture:
         '''capture video
         input: none
         output: none'''
-        mq_obj = producer.mq_producer()
-        camera = self.init_camera()
-        file_path = self.gen_file_name()
-        camera.start_recording(file_path)
-        time.sleep(120)
-        camera.stop_recording()
-        camera.close()
-        mq_obj.put_message(file_path)
-        mq_obj.close()
+        while True:
+            try:
+                mq_obj = producer.mq_producer()
+                camera = self.init_camera()
+                file_path = self.gen_file_name()
+                camera.start_recording(file_path)
+                time.sleep(120)
+                camera.stop_recording()
+                camera.close()
+                mq_obj.put_message(file_path)
+                mq_obj.close()
+            except Exception as e:
+                self.logger.error(e)
+                continue
 
 if __name__ == '__main__':
     vc_obj = VideoCapture()
-    while True:
-        try:
-            vc_obj.captuer_video()
-        except Exception as e:
-            print(e)
-            continue
+    vc_obj.captuer_video()
+
