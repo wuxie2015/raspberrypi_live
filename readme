@@ -1,0 +1,2 @@
+放到/usr/local/project/raspberrypi_video目录下，然后运行cd /usr/local/project/raspberrypi_video/server;sh raspberrypi_video.sh watchdog
+和 cd /usr/local/project/raspberrypi_video/raspberrypi/alone;sh raspberrypi_video.sh watchdog
