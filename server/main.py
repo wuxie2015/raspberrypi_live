@@ -1,6 +1,7 @@
 #! /usr/bin/python
 # -*- coding: utf-8 -*-
 import sys
+import subprocess
 import os
 import time
 import string
@@ -82,7 +83,7 @@ class Daemon(object):
                 esb = os.popen(self.findCmd).read().strip()
                 if (esb == '0'):
                     self.logger.info("deamon on  %s" % now)
-                    os.system(self.runCmd)
+                    subprocess.call(self.runCmd,shell=True)
             except:
                 pass
             time.sleep(10)
@@ -134,18 +135,16 @@ def watch_dog(name,run_cmd):
 
 def start_all():
     name_dict = {
-        'socket_server.py':'python /usr/local/project/raspberrypi_video/server/socket_server.py',
-        'scan_file.py':'python /usr/local/project/raspberrypi_video/server/scan_file.py'
+        'scan_file.py':'nohup python /usr/local/project/raspberrypi_video/server/scan_file.py > /dev/stdout 2>&1 &',
+        'socket_server.py':'nohup python /usr/local/project/raspberrypi_video/server/socket_server.py > /dev/stdout 2>&1 &'
         # 'watchdog_scan_file.py':'python /usr/local/project/raspberrypi_video/server/watchdog_scan_file.py',
         # 'watchdog_socket_server.py': 'python /usr/local/project/raspberrypi_video/server/watchdog_scan_file.py'
                  }
     daemon_list = []
     for k in name_dict:
         log_name = k.split('.')[0] + '.log'
-        daemon_list.append(
-            Daemon(k, name_dict[k], stdout=log_name, stderr=log_name)
-        )
-    for daemon in daemon_list:
+        print(k + ':' + name_dict[k])
+        daemon = Daemon(k, name_dict[k], stdout=log_name, stderr=log_name)
         daemon.start()
 
 def stop_all():
