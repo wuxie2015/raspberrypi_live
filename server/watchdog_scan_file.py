@@ -138,4 +138,4 @@ def watch_dog(name,run_cmd):
 
 if __name__ == '__main__':
     while True:
-        watch_dog('socket_client_alone.py', 'python /usr/local/project/raspberrypi_video/raspberrypi/alone/socket_client_alone.py')
+        watch_dog('scan_file.py', 'python /usr/local/project/raspberrypi_video/server/scan_file.py')

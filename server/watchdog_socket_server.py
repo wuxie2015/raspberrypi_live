@@ -67,7 +67,7 @@ class Daemon(object):
         # 检查pid文件是否存在以探测是否存在进程
         esb = os.popen(self.findCmd).read().strip()
         if not (esb == '0'):
-            print"the deamon is already running!!!"
+            print("the deamon is already running!!!")
             return
         else:
             # 启动监控
@@ -109,7 +109,7 @@ class Daemon(object):
             try:
                 self.KillPid(name)
             except:
-                print"kill %s failed!!!" % name
+                print("kill %s failed!!!" % name)
                 self.logger.error("the deamon  %s  kill failed" % name)
                 return
         return
@@ -137,4 +137,4 @@ def watch_dog(name,run_cmd):
 
 if __name__ == '__main__':
     while True:
-        watch_dog('capture_video_alone.py', 'python /usr/local/project/raspberrypi_video/raspberrypi/alone/capture_video_alone.py')
+        watch_dog('socket_server.py', 'python /usr/local/project/raspberrypi_video/server/socket_server.py')
