@@ -1,4 +1,5 @@
 *.dump
+*.log*
 *.log
 */.idea
 */.idea/*
