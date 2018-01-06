@@ -134,8 +134,10 @@ def watch_dog(name,run_cmd):
 
 def start_all():
     name_dict = {
-        'watchdog_scan_file.py':'python /usr/local/project/raspberrypi_video/server/watchdog_scan_file.py',
-        'watchdog_socket_server.py': 'python /usr/local/project/raspberrypi_video/server/watchdog_scan_file.py'
+        'socket_server.py':'python /usr/local/project/raspberrypi_video/server/socket_server.py',
+        'scan_file.py':'python /usr/local/project/raspberrypi_video/server/scan_file.py'
+        # 'watchdog_scan_file.py':'python /usr/local/project/raspberrypi_video/server/watchdog_scan_file.py',
+        # 'watchdog_socket_server.py': 'python /usr/local/project/raspberrypi_video/server/watchdog_scan_file.py'
                  }
     daemon_list = []
     for k in name_dict:

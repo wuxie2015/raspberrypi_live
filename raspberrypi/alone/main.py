@@ -134,8 +134,10 @@ def watch_dog(name,run_cmd):
 
 def start_all():
     name_dict = {
-        'watchdog_socket_client.py':'python /usr/local/project/raspberrypi_video/raspberrypi/alone/watchdog_socket_client.py',
-        'watchdog_capture_video.py': 'python /usr/local/project/raspberrypi_video/raspberrypi/alone/watchdog_socket_client.py'
+        'socket_client_alone.py':'python /usr/local/project/raspberrypi_video/raspberrypi/alone/socket_client_alone.py',
+        'capture_video_alone.py':'python /usr/local/project/raspberrypi_video/raspberrypi/alone/capture_video_alone.py'
+        # 'watchdog_socket_client.py':'python /usr/local/project/raspberrypi_video/raspberrypi/alone/watchdog_socket_client.py',
+        # 'watchdog_capture_video.py': 'python /usr/local/project/raspberrypi_video/raspberrypi/alone/watchdog_socket_client.py'
                  }
     daemon_list = []
     for k in name_dict:
