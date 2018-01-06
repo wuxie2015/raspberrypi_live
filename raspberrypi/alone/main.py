@@ -164,13 +164,14 @@ def stop_all():
 
 
 if __name__ == "__main__":
-    if len(sys.argv) != 1:
-        print('Usage: [start|stop]')
-        raise SystemExit(1)
-    if 'start' == sys.argv[0]:
-        start_all()
-    elif 'stop' == sys.argv[0]:
-        stop_all()
-    else:
-        print('Unknown command {0}'.format(sys.argv[1]))
-        raise SystemExit(1)
+    start_all()
+    # if len(sys.argv) != 1:
+    #     print('Usage: [start|stop]')
+    #     raise SystemExit(1)
+    # if 'start' == sys.argv[0]:
+    #     start_all()
+    # elif 'stop' == sys.argv[0]:
+    #     stop_all()
+    # else:
+    #     print('Unknown command {0}'.format(sys.argv[1]))
+    #     raise SystemExit(1)
