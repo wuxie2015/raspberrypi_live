@@ -4,10 +4,7 @@ import os
 import socket
 import struct
 from optparse import OptionParser
-try:
-    from raspberrypi.setting import HOST,PORT
-except Exception:
-    from setting import HOST,PORT
+from setting import HOST,PORT
 import hashlib
 from rabbitmq_util import consumer
 import logging
