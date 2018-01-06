@@ -1,10 +1,9 @@
-# -*- coding: utf-8 -*-
+#! /usr/bin/python
 # -*- coding: utf-8 -*-
 from picamera import PiCamera
 import time
 import os
 from rabbitmq_util import producer
-import pika
 
 class VideoCapture:
     def __init__(self):
