@@ -70,7 +70,7 @@ case "$1" in
         stop
         ;;
     watchdog)
-        watch_dog || exit 0
+        watch_dog 
         ;;
     *)
         echo $"Usage: $0 {start|stop|watchdog}"
