@@ -32,9 +32,14 @@ class VideoCapture:
         hight = int(os.getenv('VIDEO_HIGHT',480))
         rotation = int(os.getenv('VIDEO_ROTATION',180))
         framerate = int(os.getenv('VIDEO_FRAMERATE',25))
+        print('brightness',brightness)
+        print('width',width)
+        print('hight',hight)
+        print('rotation',rotation)
+        print('framerate',framerate)
         camera = PiCamera()
         camera.resolution = (width, hight)
-        camera.rotation = int(rotation)#上下颠倒
+        camera.rotation = int(rotation)
         camera.framerate = framerate
         camera.brightness = brightness
         return camera
