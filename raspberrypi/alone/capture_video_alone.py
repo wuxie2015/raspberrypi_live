@@ -57,7 +57,7 @@ class VideoCapture:
         camera = self.init_camera()
         while True:
             try:
-                interval = int(os.getenv('VIDEO_INTERVAL', 2))
+                interval = int(os.getenv('VIDEO_INTERVAL', 60))
                 mq_obj = producer.mq_producer()
 
                 file_path = self.gen_file_name()
