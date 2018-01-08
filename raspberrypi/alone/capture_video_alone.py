@@ -50,11 +50,12 @@ class VideoCapture:
         output: none'''
         while True:
             try:
+                interval = int(os.getenv('VIDEO_INTERVAL', 2))
                 mq_obj = producer.mq_producer()
                 camera = self.init_camera()
                 file_path = self.gen_file_name()
                 camera.start_recording(file_path)
-                time.sleep(120)
+                time.sleep(interval)
                 camera.stop_recording()
                 camera.close()
                 mq_obj.put_message(file_path)
