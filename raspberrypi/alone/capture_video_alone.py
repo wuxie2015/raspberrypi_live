@@ -6,6 +6,7 @@ import os
 from rabbitmq_util import producer
 import logging
 from logging.handlers import RotatingFileHandler
+from io import BytesIO
 
 class VideoCapture:
     def __init__(self):
