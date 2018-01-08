@@ -133,15 +133,3 @@ def get_meta_boolean(isTrue):
 
 
 
-
-
-
-with picamera.PiCamera() as camera:
-    camera.start_preview()
-    time.sleep(2)
-    camera.start_recording(Writer(conn), format='h264', resize=(640, 480), intra_period=25,
-                           quality=25)  # 开始录制，数据输出到Writer的对象里
-    while True:  # 永远不停止
-        time.sleep(60)
-    camera.stop_recording()
-    camera.stop_preview()
