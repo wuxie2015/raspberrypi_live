@@ -1,6 +1,6 @@
 #! /bin/sh
 SOCKET_SERVER_LOG="/usr/local/project/raspberrypi_video/server/socket_server.log"
-SCAN_FILE_LOG="/usr/local/project/raspberrypi_video/server/socket_server.log"
+SCAN_FILE_LOG="/usr/local/project/raspberrypi_video/server/scan_file.log"
 SOCKET_SERVER="/usr/local/project/raspberrypi_video/server/socket_server.py"
 SCAN_FILE="/usr/local/project/raspberrypi_video/server/scan_file.py"
 
