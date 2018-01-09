@@ -6,8 +6,8 @@ import traceback
 import ctypes
 from librtmp import *
 
-global meta_packet
-global start_time
+# global meta_packet
+# global start_time
 
 
 class Writer():  # camera可以通过一个类文件的对象来输出，实现write方法即可
@@ -19,8 +19,10 @@ class Writer():  # camera可以通过一个类文件的对象来输出，实现w
 
     time_stamp = 0
 
-    def __init__(self, conn):
+    def __init__(self, conn,meta_packet,start_time):
         self.conn = conn
+        self.start_time = start_time
+        self.meta_packet = meta_packet
 
     def write(self, data):
         try:
@@ -28,7 +30,6 @@ class Writer():  # camera可以通过一个类文件的对象来输出，实现w
             indexs = []
             index = 0
             data_len = len(data)
-            start_time = time.time()
             while index < data_len - 3:
                 if ord(data[index]) == 0x00 and ord(data[index + 1]) == 0x00 and ord(
                         data[index + 2]) == 0x00 and ord(data[index + 3]) == 0x01:
@@ -58,7 +59,7 @@ class Writer():  # camera可以通过一个类文件的对象来输出，实现w
                     mbody = ''.join(data_body_array)
                     time_stamp = 0  # 第一次发出的时候，发时间戳0，此后发真时间戳
                     if self.time_stamp != 0:
-                        time_stamp = int((time.time() - start_time) * 1000)
+                        time_stamp = int((time.time() - self.start_time) * 1000)
                     packet_body = RTMPPacket(type=PACKET_TYPE_VIDEO, format=PACKET_SIZE_LARGE, channel=0x06,
                                              timestamp=time_stamp, body=mbody)
                     packet_body.packet.m_nInfoField2 = 1
@@ -70,7 +71,7 @@ class Writer():  # camera可以通过一个类文件的对象来输出，实现w
                          (buf_len) & 0xff])), buf]
                     mbody = ''.join(data_body_array)
                     # if (self.time_stamp == 0):
-                    self.time_stamp = int((time.time() - start_time) * 1000)
+                    self.time_stamp = int((time.time() - self.start_time) * 1000)
                     packet_body = RTMPPacket(type=PACKET_TYPE_VIDEO, format=PACKET_SIZE_MEDIUM, channel=0x06,
                                              timestamp=self.time_stamp, body=mbody)
                 self.conn.send_packet(packet_body)

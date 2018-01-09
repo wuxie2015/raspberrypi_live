@@ -84,7 +84,7 @@ class VideoCapture:
                                  timestamp=0, body=meta_body)
         meta_packet.packet.m_nInfoField2 = 1  # 修改stream id
         stream = conn.create_stream(writeable=True)
-        return conn
+        return (conn,meta_packet)
 
     def captuer_video(self):
         '''capture video
@@ -94,8 +94,8 @@ class VideoCapture:
         start_time = time.time()
         camera.start_preview()
         time.sleep(2)
-        conn = self.init_rtmp()
-        camera.start_recording(Writer(conn), format='h264', intra_period=25,
+        (conn,meta_packet) = self.init_rtmp()
+        camera.start_recording(Writer(conn,meta_packet,start_time), format='h264', intra_period=25,
                                quality=25)  # 开始录制，数据输出到Writer的对象里
         while True:
             time.sleep(60)
