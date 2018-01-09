@@ -28,6 +28,7 @@ class Writer():  # camera可以通过一个类文件的对象来输出，实现w
             indexs = []
             index = 0
             data_len = len(data)
+            start_time = time.time()
             while index < data_len - 3:
                 if ord(data[index]) == 0x00 and ord(data[index + 1]) == 0x00 and ord(
                         data[index + 2]) == 0x00 and ord(data[index + 3]) == 0x01:
