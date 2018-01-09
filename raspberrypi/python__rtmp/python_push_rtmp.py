@@ -97,7 +97,7 @@ class Writer():  # camera可以通过一个类文件的对象来输出，实现w
                                          timestamp=0, body=data_body)
                 body_packet.packet.m_nInfoField2 = 1
 
-                self.conn.send_packet(meta_packet, queue=True)
+                self.conn.send_packet(self.meta_packet, queue=True)
                 self.conn.send_packet(body_packet, queue=True)
         except Exception, e:
             traceback.print_exc()
