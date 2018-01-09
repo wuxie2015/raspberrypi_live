@@ -99,8 +99,8 @@ class VideoCapture:
                                quality=25)  # 开始录制，数据输出到Writer的对象里
         while True:
             time.sleep(60)
-            camera.stop_recording()
-            camera.stop_preview()
+        camera.stop_recording()
+        camera.stop_preview()
 
 if __name__ == '__main__':
     vc_obj = VideoCapture()
