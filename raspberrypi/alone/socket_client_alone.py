@@ -15,12 +15,12 @@ def logger_init():
     # 定义一个RotatingFileHandler，最多备份5个日志文件，每个日志文件最大10M
     log_file = 'socket_client.log'
     Rthandler = RotatingFileHandler(log_file, maxBytes=10 * 1024 * 1024, backupCount=5)
-    Rthandler.setLevel(logging.DEBUG)
+    Rthandler.setLevel(logging.INFO)
     formatter = logging.Formatter('\n%(asctime)s   %(filename)s[line:%(lineno)d]   %(levelname)s\n%(message)s')
     Rthandler.setFormatter(formatter)
     logger = logging.getLogger()
     logger.addHandler(Rthandler)
-    logger.setLevel(logging.DEBUG)
+    logger.setLevel(logging.INFO)
     return logger
 
 logger = logger_init()
