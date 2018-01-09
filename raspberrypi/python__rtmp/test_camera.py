@@ -1,6 +1,7 @@
 #! /usr/bin/python
 # -*- coding: utf-8 -*-
 from python_push_rtmp import Writer
+import python_push_rtmp
 import librtmp
 from picamera import PiCamera
 import time
@@ -58,23 +59,23 @@ class VideoCapture:
         conn = librtmp.RTMP(
             "rtmp://%s:1935/live/livestream"%HOST,  # 推流地址
             live=True)
-        librtmp.RTMP_EnableWrite(conn.rtmp)
+        librtmp.librtmp.RTMP_EnableWrite(conn.rtmp)
         conn.connect()
         # 拼装视频格式的数据包
-        meta_body_array = [librtmp.get_meta_string('@setDataFrame'), librtmp.get_meta_string('onMetaData'),
+        meta_body_array = [python_push_rtmp.get_meta_string('@setDataFrame'), python_push_rtmp.get_meta_string('onMetaData'),
                            bytes(bytearray([0x08, 0x00, 0x00, 0x00, 0x06])),
                            # 两个字符串和ECMA array头，共计6个元素,注释掉了音频相关数据
-                           librtmp.get_property_string('width'), librtmp.get_meta_double(640.0),
-                           librtmp.get_property_string('height'), librtmp.get_meta_double(480.0),
-                           librtmp.get_property_string('videodatarate'), librtmp.get_meta_double(0.0),
-                           librtmp.get_property_string('framerate'), librtmp.get_meta_double(25.0),
-                           librtmp.get_property_string('videocodecid'), librtmp.get_meta_double(7.0),
+                           python_push_rtmp.get_property_string('width'), python_push_rtmp.get_meta_double(640.0),
+                           python_push_rtmp.get_property_string('height'), python_push_rtmp.get_meta_double(480.0),
+                           python_push_rtmp.get_property_string('videodatarate'), python_push_rtmp.get_meta_double(0.0),
+                           python_push_rtmp.get_property_string('framerate'), python_push_rtmp.get_meta_double(25.0),
+                           python_push_rtmp.get_property_string('videocodecid'), python_push_rtmp.get_meta_double(7.0),
                            # get_property_string('audiodatarate'), get_meta_double(125.0),
                            # get_property_string('audiosamplerate'), get_meta_double(44100.0),
                            # get_property_string('audiosamplesize'), get_meta_double(16.0),
                            # get_property_string('stereo'), get_meta_boolean(True),
                            # get_property_string('audiocodecid'), get_meta_double(10.0),
-                           librtmp.get_property_string('encoder'), librtmp.get_meta_string('Lavf57.56.101'),
+                           python_push_rtmp.get_property_string('encoder'), python_push_rtmp.get_meta_string('Lavf57.56.101'),
                            bytes(bytearray([0x00, 0x00, 0x09]))
                            ]
         meta_body = ''.join(meta_body_array)

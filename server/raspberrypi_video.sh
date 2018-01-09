@@ -6,23 +6,23 @@ SCAN_FILE="/usr/local/project/raspberrypi_video/server/scan_file.py"
 
 start() {
     [ -f $SOCKET_SERVER ] || exit 5
-    nohup python $SOCKET_SERVER > $SOCKET_SERVER_LOG 2>&1 &
+    nohup python3 $SOCKET_SERVER > $SOCKET_SERVER_LOG 2>&1 &
     retval1=$?
     [ -f $SCAN_FILE ] || exit 5
-    nohup python $SCAN_FILE > $SCAN_FILE_LOG 2>&1 &
+    nohup python3 $SCAN_FILE > $SCAN_FILE_LOG 2>&1 &
     retval2=$?
     retval=`expr $retval1 + $retval2`
     return $retval
 }
 start_socket_server() {
     [ -f $SOCKET_SERVER ] || exit 5
-    nohup python $SOCKET_SERVER > $SOCKET_SERVER_LOG 2>&1 &
+    nohup python3 $SOCKET_SERVER > $SOCKET_SERVER_LOG 2>&1 &
     retval=$?
     return $retval
 }
 start_scan_file() {
     [ -f $SCAN_FILE ] || exit 5
-    nohup python $SCAN_FILE > $SCAN_FILE_LOG 2>&1 &
+    nohup python3 $SCAN_FILE > $SCAN_FILE_LOG 2>&1 &
     retval=$?
     return $retval
 }
