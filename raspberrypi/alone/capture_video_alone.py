@@ -64,12 +64,13 @@ class VideoCapture:
                 camera.start_recording(file_path)
                 time.sleep(interval)
                 camera.stop_recording()
-                camera.close()
+
                 mq_obj.put_message(file_path)
                 mq_obj.close()
             except Exception as e:
                 self.logger.error(e)
                 continue
+        camera.close()
 
 if __name__ == '__main__':
     vc_obj = VideoCapture()
