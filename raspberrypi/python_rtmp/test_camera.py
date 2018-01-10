@@ -6,7 +6,6 @@ import librtmp
 from picamera import PiCamera
 import time
 import os
-from rabbitmq_util import producer
 from setting import HOST
 import logging
 from logging.handlers import RotatingFileHandler
