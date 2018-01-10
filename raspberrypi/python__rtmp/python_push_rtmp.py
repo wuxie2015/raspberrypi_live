@@ -10,7 +10,7 @@ from librtmp import *
 # global start_time
 
 
-class Writer():  # camera可以通过一个类文件的对象来输出，实现write方法即可
+class Writer(librtmp.RTMPStream):  # camera可以通过一个类文件的对象来输出，实现write方法即可
     conn = None  # rtmp连接
     sps = None  # 记录sps帧，发过以后就不需要再发了（抓包看到ffmpeg是这样的）
     pps = None  # 同上
@@ -19,7 +19,8 @@ class Writer():  # camera可以通过一个类文件的对象来输出，实现w
 
     time_stamp = 0
 
-    def __init__(self, conn,meta_packet,start_time):
+    def __init__(self, conn ,meta_packet,start_time):
+        librtmp.RTMPStream.__init__(self,conn)
         self.conn = conn
         self.start_time = start_time
         self.meta_packet = meta_packet
