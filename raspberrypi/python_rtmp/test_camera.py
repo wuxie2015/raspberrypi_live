@@ -99,7 +99,7 @@ class VideoCapture:
         while True:
             # Writer_obj = Writer(conn, meta_packet, start_time)
             Writer_obj = librtmp.RTMPStream(conn)
-            with picamera.PiCameraCircularIO(camera) as stream:
+            with picamera.PiCameraCircularIO(camera,seconds = 120) as stream:
                 camera.start_recording(stream, format='h264', intra_period=25,
                                        quality=25)  # 开始录制，数据输出到Writer的对象里
                 camera.wait_recording(60)
