@@ -18,7 +18,7 @@ class VideoCapture:
 
     def logger_init(self):
         # 定义一个RotatingFileHandler，最多备份5个日志文件，每个日志文件最大10M
-        log_file = 'capture_video_alone.log'
+        log_file = 'capture_video.log'
         Rthandler = RotatingFileHandler(log_file, maxBytes=10 * 1024 * 1024, backupCount=5)
         Rthandler.setLevel(logging.DEBUG)
         formatter = logging.Formatter('\n%(asctime)s   %(filename)s[line:%(lineno)d]   %(levelname)s\n%(message)s')
@@ -103,7 +103,7 @@ class VideoCapture:
                 # Writer_obj = librtmp.RTMPStream(conn)
                 camera.start_recording(Writer_obj, format='h264', intra_period=25,
                                        quality=15)  # 开始录制，数据输出到Writer的对象里,quality从10到40,40最低
-                camera.wait_recording()
+                camera.wait_recording(86400)
                 camera.stop_recording()
                 camera.close()
             except Exception as e:
