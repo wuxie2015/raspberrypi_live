@@ -97,7 +97,8 @@ class VideoCapture:
         (conn,meta_packet) = self.init_rtmp()
 
         while True:
-            camera.start_recording(Writer(conn, meta_packet, start_time), format='h264', intra_period=25,
+            Writer_obj = Writer(conn, meta_packet, start_time)
+            camera.start_recording(Writer_obj, format='h264', intra_period=25,
                                    quality=25)  # 开始录制，数据输出到Writer的对象里
             time.sleep(60)
             camera.stop_recording()
