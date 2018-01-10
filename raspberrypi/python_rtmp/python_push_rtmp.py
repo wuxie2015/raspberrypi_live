@@ -26,7 +26,6 @@ class Writer(RTMPStream):  # camera可以通过一个类文件的对象来输出
         self.meta_packet = meta_packet
 
     def write(self, data):
-        print('123231')
         try:
             # 寻找h264帧间隔符
             indexs = []
