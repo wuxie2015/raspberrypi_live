@@ -79,7 +79,6 @@ class VideoCapture:
                            bytes(bytearray([0x00, 0x00, 0x09]))
                            ]
         meta_body = ''.join(meta_body_array)
-        print meta_body.encode('hex')
         meta_packet = librtmp.RTMPPacket(type=librtmp.PACKET_TYPE_INFO, format=librtmp.PACKET_SIZE_LARGE, channel=0x04,
                                  timestamp=0, body=meta_body)
         meta_packet.packet.m_nInfoField2 = 1  # 修改stream id
@@ -95,17 +94,26 @@ class VideoCapture:
         time.sleep(2)
 
         while True:
+            print('0')
             camera = self.init_camera()
+            print('1')
             start_time = time.time()
+            print('2')
             (conn, meta_packet, stream_rtmp) = self.init_rtmp()
+            print('3')
             # camera.start_preview()
             Writer_obj = Writer(conn, meta_packet, start_time)
+            print('4')
             # Writer_obj = librtmp.RTMPStream(conn)
             camera.start_recording(Writer_obj, format='h264', intra_period=25,
                                    quality=25)  # 开始录制，数据输出到Writer的对象里
+            print('5')
             camera.wait_recording(60)
+            print('6')
             camera.stop_recording()
+            print('7')
             camera.close()
+            print('8')
 
             # camera.stop_preview()
 
