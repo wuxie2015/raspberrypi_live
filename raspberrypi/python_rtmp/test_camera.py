@@ -90,12 +90,14 @@ class VideoCapture:
         '''capture video
         input: none
         output: none'''
-        camera = self.init_camera()
-        start_time = time.time()
+
 
         time.sleep(2)
-        (conn,meta_packet,stream_rtmp) = self.init_rtmp()
+
         while True:
+            camera = self.init_camera()
+            start_time = time.time()
+            (conn, meta_packet, stream_rtmp) = self.init_rtmp()
             # camera.start_preview()
             Writer_obj = Writer(conn, meta_packet, start_time)
             # Writer_obj = librtmp.RTMPStream(conn)
@@ -103,6 +105,7 @@ class VideoCapture:
                                    quality=25)  # 开始录制，数据输出到Writer的对象里
             camera.wait_recording(60)
             camera.stop_recording()
+            camera.close()
 
             # camera.stop_preview()
 
