@@ -1,6 +1,7 @@
 #! /bin/sh
 BASE_DIR="/usr/local/project/raspberrypi_video/raspberrypi/python_rtmp/"
 CAPTURE_VIDEO="/usr/local/project/raspberrypi_video/raspberrypi/python_rtmp/capture_video.py"
+LOG_PATH="log_name/tmp/tcpdump_rtmp.log"
 
 start() {
     cd $BASE_DIR
@@ -29,6 +30,15 @@ watch_dog(){
     if [ $p_count_capture_video -eq 0 ];then
         start
     fi
+    if [ -f $LOG_PATH ]; then 
+        file_modify_time=$(ls --full-time $LOG_PATH  | awk '{print $6 " " $7}')
+        first_stamp=`date -d "${file_modify_time}" +%s`
+        today_stamp=`date +%s`
+        let second_stamp=($today_stamp - $first_stamp) 
+        if [ $second_stamp -gt 300];then
+	        restart
+        fi
+    fi	
 }
 
 case "$1" in
