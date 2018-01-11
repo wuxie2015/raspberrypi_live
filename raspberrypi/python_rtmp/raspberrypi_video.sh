@@ -31,15 +31,6 @@ watch_dog(){
     if [ $p_count_capture_video -eq 0 ];then
         start
     fi
-    if [ -f $LOG_PATH ]; then 
-        file_modify_time=$(ls --full-time $LOG_PATH  | awk '{print $6 " " $7}')
-        first_stamp=`date -d "${file_modify_time}" +%s`
-        today_stamp=`date +%s`
-        let second_stamp= $today_stamp - $first_stamp 
-        if [ $second_stamp -gt 1200];then
-	        restart
-        fi
-    fi
 }
 
 case "$1" in
