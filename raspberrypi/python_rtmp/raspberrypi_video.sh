@@ -8,10 +8,7 @@ start() {
     cd $BASE_DIR
     [ -f $CAPTURE_VIDEO ] || exit 5
     nohup python $CAPTURE_VIDEO > /dev/null 2>&1 &
-    retval1=$?
-    sh $LOGGER_PATH restart
-    retval2=$?
-    retval=`expr $retval1 + $retval2`
+    retval=$?
     return $retval
 }
 stop() {
