@@ -39,7 +39,7 @@ watch_dog(){
         first_stamp=`date -d "${file_modify_time}" +%s`
         today_stamp=`date +%s`
         let second_stamp= $today_stamp - $first_stamp 
-        if [ $second_stamp -gt 300];then
+        if [ $second_stamp -gt 1200];then
 	        restart
         fi
     fi
