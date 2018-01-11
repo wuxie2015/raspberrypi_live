@@ -102,7 +102,7 @@ class VideoCapture:
                 Writer_obj = Writer(conn, meta_packet, start_time)
                 # Writer_obj = librtmp.RTMPStream(conn)
                 camera.start_recording(Writer_obj, format='h264', intra_period=25,
-                                       quality=20)  # 开始录制，数据输出到Writer的对象里,quality从10到40,40最低
+                                       quality=25)  # 开始录制，数据输出到Writer的对象里,quality从10到40,40最低
                 camera.wait_recording(86400)
                 camera.stop_recording()
                 camera.close()

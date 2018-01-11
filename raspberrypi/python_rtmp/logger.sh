@@ -1,5 +1,5 @@
 #! /bin/sh
-TCPDUMP_CMD="tcpdump -i wlan0 host 118.126.65.199"
+TCPDUMP_CMD="tcpdump -v -i wlan0 host 118.126.65.199"
 
 generate_log(){
 	log_name=/tmp/tcpdump_rtmp.log
@@ -15,10 +15,12 @@ stop(){
 	fi
 }
 move(){
-	yesterday=`date -d last-day +%Y%m%d%H%M%S`
-	log_name=/tmp/tcpdump_rtmp.baklog$yesterday
-	today_logname=/tmp/tcpdump_rtmp.log
-	mv $today_logname $log_name
+	#yesterday=`date -d last-day +%Y%m%d%H%M%S`
+	#log_name='/tmp/delete/tcpdump_rtmp.baklog$yesterday'
+	#today_logname='/tmp/tcpdump_rtmp.log'
+	#mv $today_logname $log_name
+        rm -rf /tmp/tcpdump_rtmp.log
+        touch /tmp/tcpdump_rtmp.log
 }
 
 start(){
