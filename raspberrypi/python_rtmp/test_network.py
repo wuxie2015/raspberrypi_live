@@ -46,8 +46,8 @@ def main():
         test_net()
     except RuntimeError:
         subprocess.Popen(
-            ['sh', '/usr/local/project/raspberrypi_video/raspberrypi/python_rtmp/raspberrypi_video.sh', 'stop'],
+            ['sh', '/usr/local/project/raspberrypi_video/raspberrypi/python_rtmp/raspberrypi_video.sh', 'restart'],
             stdout=subprocess.PIPE)
-        subprocess.Popen(
-            ['sh', '/usr/local/project/raspberrypi_video/raspberrypi/python_rtmp/raspberrypi_video.sh', 'start'],
-            stdout=subprocess.PIPE)
+
+if __name__ == '__main__':
+    main()
