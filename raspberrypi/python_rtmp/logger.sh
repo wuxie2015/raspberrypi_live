@@ -1,49 +1,52 @@
 #! /bin/sh
-TCPDUMP_CMD="tcpdump -v -i wlan0 host 118.126.65.199"
+BASE_DIR="/usr/local/project/raspberrypi_video/raspberrypi/python_rtmp"
+CAPTURE_VIDEO=$BASE_DIR"/capture_video.py"
+LOG_PATH="log_name/tmp/tcpdump_rtmp.log"
+LOGGER_PATH=$BASE_DIR"/logger.sh"
 
-generate_log(){
-	log_name=/tmp/tcpdump_rtmp.log
-    	nohup $TCPDUMP_CMD > $log_name 2>&1 &
+start() {
+    cd $BASE_DIR
+    [ -f $CAPTURE_VIDEO ] || exit 5
+    nohup python $CAPTURE_VIDEO > /dev/null 2>&1 &
+    retval=$?
+    return $retval
 }
-stop(){
-	PID=$(ps -aux|grep tcpdump |grep -v grep|awk 'NR==1 {printf $2}')
-	kill -9 ${PID}
-	if [ $? -eq 0 ];then
-	        echo "kill tcpdump success"
-	else
-		echo "kill tcpdump fail"
-	fi
+stop() {
+    PID=$(ps -aux|grep capture_video.py|grep -v grep|awk 'NR==1 {printf $2}')
+    kill -9 ${PID}
+    if [ $? -eq 0 ];then
+        echo "kill capture_video.py success"
+    else
+        echo "kill capture_video.py fail"
+    fi
 }
-move(){
-	#yesterday=`date -d last-day +%Y%m%d%H%M%S`
-	#log_name='/tmp/delete/tcpdump_rtmp.baklog$yesterday'
-	#today_logname='/tmp/tcpdump_rtmp.log'
-	#mv $today_logname $log_name
-        rm -rf /tmp/tcpdump_rtmp.log
-        touch /tmp/tcpdump_rtmp.log
+restart() {
+    stop
+    sleep 1
+    start
 }
-
-start(){
-	generate_log
-}
-
-restart(){
-	stop
-	move
-	generate_log
+watch_dog(){
+    p_count_capture_video_cmd=$(ps -aux|grep capture_video.py|grep -v grep|wc -l)
+    p_count_capture_video=${p_count_capture_video_cmd}
+    if [ $p_count_capture_video -eq 0 ];then
+        start
+    fi
 }
 
 case "$1" in
-	start)
-		start
-		;;
-	stop)
-		stop
-		;;
-	restart)
-		restart || exit 0
-		;;
-	*)
-		echo $"Usage: $0 {start|stop|restart}"
-		exit 2
+    start)
+        start
+        ;;
+    stop)
+        stop
+        ;;
+    restart)
+        restart
+        ;;
+    watchdog)
+        watch_dog || exit 0
+        ;;
+    *)
+        echo $"Usage: $0 {start|stop|watchdog}"
+        exit 2
 esac

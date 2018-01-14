@@ -5,16 +5,9 @@ import time
 import traceback
 import ctypes
 from librtmp import *
-from setting import HOST
-import socket
 
 # global meta_packet
 # global start_time
-
-def test_network():
-    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    s.connect((HOST, int(1935)))
-
 
 class Writer(RTMPStream):  # camera可以通过一个类文件的对象来输出，实现write方法即可
     conn = None  # rtmp连接
@@ -81,7 +74,6 @@ class Writer(RTMPStream):  # camera可以通过一个类文件的对象来输出
                     self.time_stamp = int((time.time() - self.start_time) * 1000)
                     packet_body = RTMPPacket(type=PACKET_TYPE_VIDEO, format=PACKET_SIZE_MEDIUM, channel=0x06,
                                              timestamp=self.time_stamp, body=mbody)
-                test_network()# catch it in the upper layer
                 self.conn.send_packet(packet_body)
             elif len(indexs) == 2:  # sps pps帧
                 if self.sps is not None:

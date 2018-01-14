@@ -40,6 +40,9 @@ case "$1" in
     stop)
         stop
         ;;
+    restart)
+        restart
+        ;;
     watchdog)
         watch_dog || exit 0
         ;;
