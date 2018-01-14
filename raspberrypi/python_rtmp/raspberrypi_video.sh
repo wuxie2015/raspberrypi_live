@@ -1,6 +1,7 @@
 #! /bin/sh
 BASE_DIR="/usr/local/project/raspberrypi_video/raspberrypi/python_rtmp"
 CAPTURE_VIDEO=$BASE_DIR"/capture_video.py"
+STAND_BY=$BASE_DIR"/test_network.py"
 LOG_PATH="log_name/tmp/tcpdump_rtmp.log"
 LOGGER_PATH=$BASE_DIR"/logger.sh"
 
@@ -31,6 +32,7 @@ watch_dog(){
     if [ $p_count_capture_video -eq 0 ];then
         start
     fi
+    nohup python $STAND_BY> /dev/null 2>&1 &
 }
 
 case "$1" in
