@@ -108,6 +108,11 @@ class VideoCapture:
                 camera.close()
             except Exception as e:
                 self.logger.error(e)
+                try:
+                    camera.stop_recording()
+                    camera.close()
+                except Exception as e:
+                    pass
                 continue
 
 
