@@ -42,9 +42,11 @@ def test_net():
 
 
 def main():
+    logger = logger_init()
     try:
         test_net()
     except RuntimeError:
+        logger.error('restarting')
         subprocess.Popen(
             ['sh', '/usr/local/project/raspberrypi_video/raspberrypi/python_rtmp/raspberrypi_video.sh', 'restart'],
             stdout=subprocess.PIPE)
