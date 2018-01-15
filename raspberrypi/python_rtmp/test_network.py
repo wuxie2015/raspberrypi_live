@@ -39,7 +39,7 @@ def time_limit(interval):
 
 def test_net(timeout=30):
     logger = logger_init()
-    p = subprocess.Popen(['tcpdump','tcp','port','1935','and','host',HOST,' -i','wlan0','-c','10']
+    p = subprocess.Popen(['tcpdump','tcp','port','1935','and','src','host',HOST,' -i','wlan0','-c','10']
                      ,shell=True, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     t_beginning = time.time()
     seconds_passed = 0

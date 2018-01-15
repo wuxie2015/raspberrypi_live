@@ -27,12 +27,12 @@ restart() {
     start
 }
 watch_dog(){
+    nohup python $STAND_BY> /dev/null 2>&1 &
     p_count_capture_video_cmd=$(ps -aux|grep capture_video.py|grep -v grep|wc -l)
     p_count_capture_video=${p_count_capture_video_cmd}
     if [ $p_count_capture_video -eq 0 ];then
         start
     fi
-    nohup python $STAND_BY> /dev/null 2>&1 &
 }
 
 case "$1" in
