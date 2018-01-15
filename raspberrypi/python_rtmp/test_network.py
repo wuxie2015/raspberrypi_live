@@ -38,6 +38,7 @@ def time_limit(interval):
     return wraps
 
 def test_net(timeout=30):
+    logger = logger_init()
     p = subprocess.Popen(['tcpdump','tcp','port','1935','and','host',HOST,' -i','wlan0','-c','10']
                      ,shell=True, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     t_beginning = time.time()
@@ -45,6 +46,7 @@ def test_net(timeout=30):
     while True:
         seconds_passed = time.time() - t_beginning
         if p.poll() is not None:
+            logger.info('check passed')
             break
         if timeout and seconds_passed > timeout:
             p.terminate()
