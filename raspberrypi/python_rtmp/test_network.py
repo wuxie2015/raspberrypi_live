@@ -5,6 +5,7 @@ import signal
 import logging
 from logging.handlers import RotatingFileHandler
 import os
+import time
 
 # detact whether the video is alive
 
@@ -37,8 +38,20 @@ def time_limit(interval):
     return wraps
 
 @time_limit(30)
-def test_net():
-    os.system('tcpdump tcp port 1935 and host %s  -i wlan0 -c 10' % HOST)
+def test_net(timeout=30):
+    p = subprocess.Popen(['tcpdump','tcp','port','1935','and','host',HOST,' -i','wlan0','-c','10']
+                     ,shell=True, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    t_beginning = time.time()
+    seconds_passed = 0
+    while True:
+        seconds_passed = time.time() - t_beginning
+        if p.poll() is not None:
+            break
+        if timeout and seconds_passed > timeout:
+            p.terminate()
+            raise RuntimeError()
+        time.sleep(0.1)
+    return p.stdout.read()
 
 
 def main():
