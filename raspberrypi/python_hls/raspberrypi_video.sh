@@ -1,7 +1,7 @@
 #! /bin/sh
-BASE_DIR="/usr/local/project/raspberrypi_video/raspberrypi/alone/"
-CAPTURE_VIDEO="/usr/local/project/raspberrypi_video/raspberrypi/alone/capture_video_alone.py"
-SOCKET_CLIENT="/usr/local/project/raspberrypi_video/raspberrypi/alone/socket_client_alone.py"
+BASE_DIR="/usr/local/project/raspberrypi_video/raspberrypi/python_hls/"
+CAPTURE_VIDEO="/usr/local/project/raspberrypi_video/raspberrypi/python_hls/capture_video_alone.py"
+SOCKET_CLIENT="/usr/local/project/raspberrypi_video/raspberrypi/python_hls/socket_client_alone.py"
 
 start() {
     cd $BASE_DIR

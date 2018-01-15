@@ -59,11 +59,11 @@ class VideoCapture:
             except_times = 0
             while True:
                 try:
-                    interval = int(os.getenv('VIDEO_INTERVAL', 120))
+                    interval = int(os.getenv('VIDEO_INTERVAL', 10))
                     mq_obj = producer.mq_producer()
 
                     file_path = self.gen_file_name()
-                    camera.start_recording(file_path)
+                    camera.start_recording(file_path,format='mjpeg')#这个使用hls
                     time.sleep(interval)
                     camera.stop_recording()
 
