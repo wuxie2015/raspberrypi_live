@@ -54,23 +54,29 @@ class VideoCapture:
         '''capture video
         input: none
         output: none'''
-        camera = self.init_camera()
         while True:
-            try:
-                interval = int(os.getenv('VIDEO_INTERVAL', 120))
-                mq_obj = producer.mq_producer()
+            camera = self.init_camera()
+            except_times = 0
+            while True:
+                try:
+                    interval = int(os.getenv('VIDEO_INTERVAL', 120))
+                    mq_obj = producer.mq_producer()
 
-                file_path = self.gen_file_name()
-                camera.start_recording(file_path)
-                time.sleep(interval)
-                camera.stop_recording()
+                    file_path = self.gen_file_name()
+                    camera.start_recording(file_path)
+                    time.sleep(interval)
+                    camera.stop_recording()
 
-                mq_obj.put_message(file_path)
-                mq_obj.close()
-            except Exception as e:
-                self.logger.error(e)
-                continue
-        camera.close()
+                    mq_obj.put_message(file_path)
+                    mq_obj.close()
+                except Exception as e:
+                    self.logger.error(e)
+                    except_times = except_times + 1
+                    if except_times < 50:#累计错误50次退出重新初始化
+                        continue
+                    else:
+                        break
+            camera.close()
 
 if __name__ == '__main__':
     vc_obj = VideoCapture()
