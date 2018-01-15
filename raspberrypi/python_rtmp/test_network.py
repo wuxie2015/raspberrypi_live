@@ -37,7 +37,6 @@ def time_limit(interval):
         return deco
     return wraps
 
-@time_limit(30)
 def test_net(timeout=30):
     p = subprocess.Popen(['tcpdump','tcp','port','1935','and','host',HOST,' -i','wlan0','-c','10']
                      ,shell=True, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
