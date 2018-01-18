@@ -6,6 +6,7 @@ import logging
 from logging.handlers import RotatingFileHandler
 import os
 import time
+import sys
 
 # detact whether the video is alive
 
@@ -39,7 +40,7 @@ def time_limit(interval):
 
 def test_net(timeout=30):
     logger = logger_init()
-    p = subprocess.Popen(['tcpdump','tcp','port','1935','and','host',HOST,' -i','wlan0','-c','10']
+    p = subprocess.Popen(['tcpdump','tcp','port','1935','and','src','host',HOST,' -i','wlan0','-c','10']
                      ,shell=True, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     t_beginning = time.time()
     seconds_passed = 0
@@ -59,11 +60,10 @@ def main():
     logger = logger_init()
     try:
         test_net()
+        sys.exit(0)
     except RuntimeError:
         logger.error('restarting')
-        subprocess.Popen(
-            ['sh', '/usr/local/project/raspberrypi_video/raspberrypi/python_rtmp/raspberrypi_video.sh', 'restart'],
-            stdout=subprocess.PIPE)
+        sys.exit(1)
 
 if __name__ == '__main__':
     main()
