@@ -27,7 +27,11 @@ restart() {
     start
 }
 watch_dog(){
-    nohup python $STAND_BY> /dev/null 2>&1 &
+    python $STAND_BY> /dev/null 2>&1
+    if [ $? -ne 0];then
+        restart
+        exit 0
+    fi 
     p_count_capture_video_cmd=$(ps -aux|grep capture_video.py|grep -v grep|wc -l)
     p_count_capture_video=${p_count_capture_video_cmd}
     if [ $p_count_capture_video -eq 0 ];then

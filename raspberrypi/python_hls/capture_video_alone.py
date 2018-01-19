@@ -63,7 +63,7 @@ class VideoCapture:
                     mq_obj = producer.mq_producer()
 
                     file_path = self.gen_file_name()
-                    camera.start_recording(file_path,format='mjpeg')#这个使用hls
+                    camera.start_recording(file_path,format='h264')#这个使用hls
                     time.sleep(interval)
                     camera.stop_recording()
 
