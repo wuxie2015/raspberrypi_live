@@ -12,6 +12,15 @@
   树莓派：
     1、切换到root用户
     2、放到/usr/local/project/raspberrypi_video/目录下
+    3、在/usr/local/project/raspberrypi_video/raspberrypi/python_rtmp目录下建一个setting.py文件，文件内容如附件
     3、在setting里面配置rabbitmq
     4、cd /usr/local/project/raspberrypi_video/raspberrypi/python_rtmp;sh raspberrypi_video.sh watchdog
     5、运行sh raspberrypi_video.sh watchdog
+附件：
+setting.py
+# -*- coding: utf-8 -*-
+
+HOST = '*.*.*.*'
+PORT = *
+RABBIT_USER = '*'
+RABBIT_PASSWORD = '*'
