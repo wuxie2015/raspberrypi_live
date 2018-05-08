@@ -24,3 +24,6 @@ HOST = '*.*.*.*'
 PORT = *
 RABBIT_USER = '*'
 RABBIT_PASSWORD = '*'
+注意事项：
+服务端使用python3.6运行
+树莓派上使用python2.7运行
