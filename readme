@@ -1,7 +1,7 @@
 
 依赖软件：
 1、rabbitmq
-2、simple rtmp server(简称srs)
+2、simple rtmp server(简称srs)：https://github.com/winlinvip/simple-rtmp-server 
 使用方法：
   服务端：
     1、运行rabbitmq和srs，可以把srs安装到/usr/local/srs这个目录下，然后运行sh base_elements.sh start启动基础组件
