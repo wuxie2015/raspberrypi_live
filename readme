@@ -1,2 +1,17 @@
-放到/usr/local/project/raspberrypi_video目录下，然后运行cd /usr/local/project/raspberrypi_video/server;sh raspberrypi_video.sh watchdog
-和 cd /usr/local/project/raspberrypi_video/raspberrypi/alone;sh raspberrypi_video.sh watchdog
+
+依赖软件：
+1、rabbitmq
+2、simple rtmp server(简称srs)
+使用方法：
+  服务端：
+    1、运行rabbitmq和srs，可以把srs安装到/usr/local/srs这个目录下，然后运行sh base_elements.sh start启动基础组件
+    2、放到/usr/local/project/raspberrypi_video目录下
+    3、在rabbimqutil中的文件里配置rabbitmq
+    4、cd /usr/local/project/raspberrypi_video/server
+    5、sh raspberrypi_video.sh watchdog
+  树莓派：
+    1、切换到root用户
+    2、放到/usr/local/project/raspberrypi_video/目录下
+    3、在setting里面配置rabbitmq
+    4、cd /usr/local/project/raspberrypi_video/raspberrypi/python_rtmp;sh raspberrypi_video.sh watchdog
+    5、运行sh raspberrypi_video.sh watchdog
