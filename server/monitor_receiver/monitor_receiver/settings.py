@@ -11,6 +11,8 @@ https://docs.djangoproject.com/en/2.0/ref/settings/
 """
 
 import os
+from cloghandler import ConcurrentRotatingFileHandler
+from mongoengine import connect
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -51,11 +53,10 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'monitor_receiver.urls'
-
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -75,27 +76,27 @@ WSGI_APPLICATION = 'monitor_receiver.wsgi.application'
 # https://docs.djangoproject.com/en/2.0/ref/settings/#databases
 
 DATABASES = {
-    #'default': {
-    #    'ENGINE': 'django.db.backends.sqlite3',
-    #    'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-    #}
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'abc',
-        'USER': 'abc',
-        'PASSWORD': '123456',
-        'HOST': '127.0.0.1',
-        'PORT': '3306',
-        'OPTIONS': {
-            'init_command': 'SET NAMES utf8, sql_mode="STRICT_TRANS_TABLES"',
-        },
-        'TEST': {
-            'CHARSET': 'utf8',
-            'COLLATION': 'utf8_general_ci',
-        }
-    },
+       'ENGINE': 'None',
+       # 'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+    }
+    # 'default': {
+    #     'ENGINE': 'django.db.backends.mysql',
+    #     'NAME': 'abc',
+    #     'USER': 'abc',
+    #     'PASSWORD': '123456',
+    #     'HOST': '127.0.0.1',
+    #     'PORT': '3306',
+    #     'OPTIONS': {
+    #         'init_command': 'SET NAMES utf8, sql_mode="STRICT_TRANS_TABLES"',
+    #     },
+    #     'TEST': {
+    #         'CHARSET': 'utf8',
+    #         'COLLATION': 'utf8_general_ci',
+    #     }
+    # },
 }
-
+connect(db='test', host='127.0.0.1',port=27017,username='mymongo',password='mymongo')
 
 # Password validation
 # https://docs.djangoproject.com/en/2.0/ref/settings/#auth-password-validators
@@ -115,6 +116,127 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+# Logging
+# https://docs.djangoproject.com/en/1.10/topics/logging/
+VA = '%(asctime)s,%(msecs)03d'
+VB = '[%(module)s:%(name)s:%(funcName)s:%(lineno)d]'
+VC = '[P%(process)d:T%(thread)d]'
+VD = '%(levelname)-5s - %(message)s'
+SA = '%(asctime)s,%(msecs)03d'
+SB = '[%(name)s:%(funcName)s:%(lineno)d]'
+SC = '%(levelname)-5s - %(message)s'
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'verbose': {
+            'format': '{} {} {} {}'.format(VA, VB, VC, VD),
+            'datefmt' : '%Y-%m-%d %H:%M:%S'
+        },
+        'standard': {
+            'format': '{} {} {}'.format(SA, SB, SC),
+            'datefmt' : '%Y-%m-%d %H:%M:%S'
+        },
+        'simple': {
+            'format': '%(levelname)s %(message)s'
+        }
+    },
+    'handlers': {
+        'console': {
+            'level': 'DEBUG',
+            'class': 'logging.StreamHandler',
+            'formatter': 'standard'
+        },
+        'file': {
+            'level': 'INFO',
+            'class': 'logging.FileHandler',
+            'filename': os.path.join(BASE_DIR, 'log/oms.log'),
+            'formatter': 'standard'
+        },
+        'rotatingFile': {
+            'level': 'INFO',
+            #'class': 'logging.handlers.RotatingFileHandler',
+            'class': 'logging.handlers.ConcurrentRotatingFileHandler',
+            'filename': os.path.join(BASE_DIR, 'log/oms.log'),
+            'maxBytes': 1024 * 1024 * 20,
+            'backupCount': 50,
+            'formatter': 'standard'
+        },
+        'timedRotatingFile': {
+            'level': 'DEBUG',
+            'class': 'logging.handlers.TimedRotatingFileHandler',
+            'filename': os.path.join(BASE_DIR, 'log/oms.log'),
+            'when':'midnight',
+            'interval': 1,
+            'backupCount': 90,
+            'formatter':'standard'
+        },
+    },
+    'loggers': {
+        # root, '' and 'cmdb' would be duplicated
+        #'': {
+        #    'handlers': ['rotatingFile'],
+        #    'level': 'INFO'
+        #},
+        'django': {
+            'handlers':['rotatingFile'],
+            'propagate': True,
+            'level': os.getenv('DJANGO_LOG_LEVEL', 'INFO')
+        },
+        'auth': {
+            'handlers': ['rotatingFile'],
+            'level': 'INFO'
+        },
+        'auth_v2': {
+            'handlers': ['rotatingFile'],
+            'level': 'INFO'
+        },
+        'ci': {
+            'handlers': ['rotatingFile'],
+            'level': 'INFO'
+        },
+        'cmdb': {
+            'handlers': ['rotatingFile'],
+            'level': 'INFO'
+        },
+        'demo': {
+            'handlers': ['rotatingFile'],
+            'level': 'INFO'
+        },
+        'deployment': {
+            'handlers': ['rotatingFile'],
+            'level': 'INFO'
+        },
+        'lb': {
+            'handlers': ['rotatingFile'],
+            'level': 'INFO'
+        },
+        'oms': {
+            'handlers': ['rotatingFile'],
+            'level': 'INFO'
+        },
+        'operation': {
+            'handlers': ['rotatingFile'],
+            'level': 'INFO'
+        },
+        'report': {
+            'handlers': ['rotatingFile'],
+            'level': 'INFO'
+        },
+        'util': {
+            'handlers': ['rotatingFile'],
+            'level': 'INFO'
+        },
+        'weixin': {
+            'handlers': ['rotatingFile'],
+            'level': 'INFO'
+        },
+        'server_agent': {
+            'handlers': ['rotatingFile'],
+            'level': 'INFO'
+        }
+    },
+}
 
 # Internationalization
 # https://docs.djangoproject.com/en/2.0/topics/i18n/
