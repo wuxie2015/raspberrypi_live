@@ -13,3 +13,4 @@ server/test_file/*
 server/test_file
 *.out
 *.h264
+*venv/*
