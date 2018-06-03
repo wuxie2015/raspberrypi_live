@@ -16,3 +16,8 @@ server/test_file
 */venv/*
 *venv*
 *idea*
+*.pyd
+*.exp
+*.lib
+*.obj
+*.o
