@@ -1,5 +1,5 @@
 #! /bin/bash
-BASE_DIR="/usr/local/project/raspberrypi_video/raspberrypi/python_rtmp"
+BASE_DIR="/usr/local/project/raspberrypi_video/raspberrypi/python_rtmp/"
 SCRIPT_NAME="capture_video.py"
 SCRIPT_PATH=$BASE_DIR$SCRIPT_NAME
 

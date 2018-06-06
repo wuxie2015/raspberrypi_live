@@ -9,23 +9,31 @@
 # Short-Description: Start communicating daemon
 ### END INIT INFO
 
-BASE_DIR="/usr/local/project/raspberry_light/raspberrypi/communicate"
-ETO=$BASE_DIR"/tri_body_eto.py"
+BASE_DIR="/usr/local/project/raspberry_light/raspberrypi/communicate/"
+SCRIPT_NAME="tri_body_eto.py"
+SCRIPT_PATH=$BASE_DIR$SCRIPT_NAME
 
 start() {
     cd $BASE_DIR
-    [ -f $ETO ] || exit 5
-    nohup python $ETO > /dev/null 2>&1 &
-    retval=$?
-    return $retval
+    [ -f $SCRIPT_PATH ] || exit 5
+	pids=`ps -aux|grep $SCRIPT_NAME|grep -v grep|awk '{print $2}'`
+    if [ ! ${pids} ];then
+		nohup python $SCRIPT_PATH > /dev/null 2>&1 &
+		retval=$?
+		echo start $SCRIPT_NAME success
+	else
+	    echo $SCRIPT_NAME is running
+	    retval=0
+	fi
+	return $retval
 }
 stop() {
-    PID=$(ps -aux|grep tri_body_eto.py|grep -v grep|awk 'NR==1 {printf $2}')
+    PID=$(ps -aux|grep $SCRIPT_NAME|grep -v grep|awk 'NR==1 {printf $2}')
     kill -9 ${PID}
     if [ $? -eq 0 ];then
-        echo "kill tri_body_eto.py success"
+        echo kill $SCRIPT_NAME success
     else
-        echo "kill tri_body_eto.py fail"
+        echo kill $SCRIPT_NAME fail
     fi
 }
 restart() {
@@ -34,9 +42,10 @@ restart() {
     start
 }
 watch_dog(){
-    p_count_eto_cmd=$(ps -aux|grep tri_body_eto.py|grep -v grep|wc -l)
-    p_count_eto=${p_count_eto_cmd}
-    if [ $p_count_eto -eq 0 ];then
+    pids=`ps -aux|grep $SCRIPT_NAME|grep -v grep|awk '{print $2}'`
+    if [ ${pids} ];then
+        echo $SCRIPT_NAME is running
+    else
         start
     fi
 }

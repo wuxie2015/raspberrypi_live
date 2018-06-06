@@ -1,46 +1,75 @@
-#! /bin/sh
+#! /bin/bash
 
-BASE_DIR="/usr/local/project/raspberrypi_light/server/communicate"
-SOCKET_SERVER=$BASE_DIR"/tri_body_red_shore.py"
-ETO=$BASE_DIR"/tri_body_eto.py"
+BASE_DIR="/usr/local/project/raspberrypi_light/server/communicate/"
+SOCKET_SERVER_NAME="tri_body_red_shore.py"
+ETO_NAME="tri_body_eto.py"
+SOCKET_SERVER=$BASE_DIR$SOCKET_SERVER_NAME
+ETO=$BASE_DIR$ETO_NAME
 
 start() {
     [ -f $SOCKET_SERVER ] || exit 5
-    nohup python3 $SOCKET_SERVER > /dev/null 2>&1 &
-    retval1=$?
+    pids1=`ps -aux|grep $SOCKET_SERVER_NAME|grep -v grep|awk '{print $2}'`
+    if [ ! ${pids1} ];then
+        nohup python3 $SOCKET_SERVER > /dev/null 2>&1 &
+        retval1=$?
+        echo start $SOCKET_SERVER_NAME success
+    else
+	    echo $SOCKET_SERVER_NAME is running
+	    retval1=0
+	fi
     [ -f $ETO ] || exit 5
-    nohup python3 $ETO > /dev/null 2>&1 &
-    retval2=$?
+    pids2=`ps -aux|grep $ETO_NAME|grep -v grep|awk '{print $2}'`
+    if [ ! ${pids2} ];then
+        nohup python3 $ETO > /dev/null 2>&1 &
+        retval2=$?
+        echo start $ETO_NAME success
+    else
+	    echo $ETO_NAME is running
+	    retval2=0
     retval=`expr $retval1 + $retval2`
     return $retval
 }
 start_socket_server() {
     [ -f $SOCKET_SERVER ] || exit 5
-    nohup python3 $SOCKET_SERVER > /dev/null 2>&1 &
-    retval=$?
+    pids=`ps -aux|grep $SOCKET_SERVER_NAME|grep -v grep|awk '{print $2}'`
+    if [ ! ${pids} ];then
+        nohup python3 $SOCKET_SERVER > /dev/null 2>&1 &
+        retval=$?
+        echo start $SOCKET_SERVER_NAME success
+    else
+	    echo $SOCKET_SERVER_NAME is running
+	    retval=0
+	fi
     return $retval
 }
 start_eto() {
     [ -f $ETO ] || exit 5
-    nohup python3 $ETO > /dev/null 2>&1 &
-    retval=$?
-    return $retval
+    pids=`ps -aux|grep $ETO_NAME|grep -v grep|awk '{print $2}'`
+    if [ ! ${pids} ];then
+        nohup python3 $ETO > /dev/null 2>&1 &
+        retval=$?
+        echo start $ETO_NAME success
+    else
+	    echo $ETO_NAME is running
+	    retval=0
+	fi
+	return $retval
 }
 
 stop() {
-    PID1=$(ps -aux|grep tri_body_red_shore.py|grep -v grep|awk 'NR==1 {printf $2}')
+    PID1=$(ps -aux|grep $SOCKET_SERVER_NAME|grep -v grep|awk 'NR==1 {printf $2}')
     kill -9 ${PID1}
     if [ $? -eq 0 ];then
-        echo "kill tri_body_red_shore.py success"
+        echo kill $SOCKET_SERVER_NAME success
     else
-        echo "kill tri_body_red_shore.py fail"
+        echo kill $SOCKET_SERVER_NAME fail
     fi
-    PID2=$(ps -aux|grep tri_body_eto.py|grep -v grep|awk 'NR==1 {printf $2}')
+    PID2=$(ps -aux|grep $ETO_NAME|grep -v grep|awk 'NR==1 {printf $2}')
     kill -9 ${PID2}
     if [ $? -eq 0 ];then
-    echo "kill tri_body_eto.py success"
+        echo kill $ETO_NAME success
     else
-        echo "kill tri_body_eto.py fail"
+        echo kill $ETO_NAME fail
     fi
 }
 restart() {
@@ -49,14 +78,16 @@ restart() {
     start
 }
 watch_dog() {
-    p_count_red_shore_cmd=$(ps -aux|grep tri_body_red_shore.py|grep -v grep|wc -l)
-    p_count_red_shore=${p_count_red_shore_cmd}
-    if [[ $p_count_red_shore -eq 0 ]];then
+    pids_red_shore=`ps -aux|grep $SOCKET_SERVER_NAME|grep -v grep|awk '{print $2}'`
+    if [ ${pids_red_shore} ];then
+        echo $SOCKET_SERVER_NAME is running
+    else
         start_socket_server
     fi
-    p_count_eto_cmd=$(ps -aux|grep tri_body_eto.py|grep -v grep|wc -l)
-    p_count_eto=${p_count_eto_cmd}
-    if [[ $p_count_eto -eq 0 ]];then
+    pids_eto=`ps -aux|grep $ETO_NAME|grep -v grep|awk '{print $2}'`
+    if [ ${pids_eto} ];then
+        echo $ETO_NAME is running
+    else
         start_eto
     fi
 }
