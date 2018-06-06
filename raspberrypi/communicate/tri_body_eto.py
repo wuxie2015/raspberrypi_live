@@ -94,8 +94,9 @@ def main_loop():
                 pass
             chat_obj.close()
             logger.info('reconnecting')
-        except Exception as e:
+        except BaseException as e:
             logger.critical("Crittical Error occured %s"%e)
+            continue
 
 if __name__ == '__main__':
     main_loop()

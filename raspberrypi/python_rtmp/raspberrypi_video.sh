@@ -1,24 +1,29 @@
-#! /bin/sh
+#! /bin/bash
 BASE_DIR="/usr/local/project/raspberrypi_video/raspberrypi/python_rtmp"
-CAPTURE_VIDEO=$BASE_DIR"/capture_video.py"
-STAND_BY=$BASE_DIR"/test_network.py"
-LOG_PATH="log_name/tmp/tcpdump_rtmp.log"
-LOGGER_PATH=$BASE_DIR"/logger.sh"
+SCRIPT_NAME="capture_video.py"
+SCRIPT_PATH=$BASE_DIR$SCRIPT_NAME
 
 start() {
     cd $BASE_DIR
-    [ -f $CAPTURE_VIDEO ] || exit 5
-    nohup python $CAPTURE_VIDEO > /dev/null 2>&1 &
-    retval=$?
-    return $retval
+    [ -f $SCRIPT_PATH ] || exit 5
+	pids=`ps -aux|grep $SCRIPT_NAME|grep -v grep|awk '{print $2}'`
+    if [ ! ${pids} ];then
+		nohup python $SCRIPT_PATH > /dev/null 2>&1 &
+		retval=$?
+		echo start $SCRIPT_NAME success
+	else
+	    echo $SCRIPT_NAME is running
+	    retval=0
+	fi
+	return $retval
 }
 stop() {
-    PID=$(ps -aux|grep capture_video.py|grep -v grep|awk 'NR==1 {printf $2}')
+    PID=$(ps -aux|grep $SCRIPT_NAME|grep -v grep|awk 'NR==1 {printf $2}')
     kill -9 ${PID}
     if [ $? -eq 0 ];then
-        echo "kill capture_video.py success"
+        echo kill $SCRIPT_NAME success
     else
-        echo "kill capture_video.py fail"
+        echo kill $SCRIPT_NAME fail
     fi
 }
 restart() {
@@ -27,9 +32,10 @@ restart() {
     start
 }
 watch_dog(){
-    p_count_capture_video_cmd=$(ps -aux|grep capture_video.py|grep -v grep|wc -l)
-    p_count_capture_video=${p_count_capture_video_cmd}
-    if [ $p_count_capture_video -eq 0 ];then
+    pids=`ps -aux|grep $SCRIPT_NAME|grep -v grep|awk '{print $2}'`
+    if [ ${pids} ];then
+        echo $SCRIPT_NAME is running
+    else
         start
     fi
 }

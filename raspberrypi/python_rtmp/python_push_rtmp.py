@@ -1,6 +1,5 @@
 # -- coding: utf-8 --
 # http://blog.csdn.net/luhanglei
-import picamera
 import time
 import traceback
 import ctypes
