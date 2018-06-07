@@ -6,6 +6,8 @@ from optparse import OptionParser
 from gpio_control import *
 import wiringpi2 as gpio
 import time
+import urllib
+import urllib2
 
 def init(channel):
     gpio.wiringPiSetup()
@@ -97,14 +99,22 @@ def process_data(data_tuple_list):
 def main(channel):
     channel = int(channel)
     init(channel)
-    result_dict = None
-    while result_dict is None:
-        data_list = get_data(channel)
-        result_dict = process_data(data_list)
-        time.sleep(2)
-        reinit(channel)
-    print(result_dict)
+    while True:
+        result_dict = None
+        while result_dict is None:
+            data_list = get_data(channel)
+            result_dict = process_data(data_list)
+            time.sleep(2)
+            reinit(channel)
+        post_request(result_dict)
 
+def post_request(data,url="http://47.96.112.26/temperature/templist"):
+    data_urlencode = urllib.urlencode(data)
+    req = urllib2.Request(url=url, data=data_urlencode)
+
+    res_data = urllib2.urlopen(req)
+    res = res_data.read()
+    print res
 
 if __name__ == '__main__':
     parser = OptionParser()
