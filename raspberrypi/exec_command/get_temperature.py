@@ -3,7 +3,7 @@
 import time
 import datetime
 from optparse import OptionParser
-from gpio_control import *
+from setting import HOST
 import wiringpi2 as gpio
 import time
 import urllib
@@ -108,7 +108,7 @@ def main(channel):
             reinit(channel)
         post_request(result_dict)
 
-def post_request(data,url="http://47.96.112.26/temperature/templist"):
+def post_request(data,url="http://%s/temperature/templist"%HOST):
     data_urlencode = urllib.urlencode(data)
     req = urllib2.Request(url=url, data=data_urlencode)
 
