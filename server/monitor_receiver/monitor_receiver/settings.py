@@ -78,7 +78,7 @@ WSGI_APPLICATION = 'monitor_receiver.wsgi.application'
 
 DATABASES = {
     'default': {
-       'ENGINE': 'None',
+       'ENGINE': None,
        # 'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }
     # 'default': {
