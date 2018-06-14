@@ -77,27 +77,26 @@ WSGI_APPLICATION = 'monitor_receiver.wsgi.application'
 # https://docs.djangoproject.com/en/2.0/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-       'ENGINE': 'None',
-       # 'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-    }
     # 'default': {
-    #     'ENGINE': 'django.db.backends.mysql',
-    #     'NAME': 'abc',
-    #     'USER': 'abc',
-    #     'PASSWORD': '123456',
-    #     'HOST': '127.0.0.1',
-    #     'PORT': '3306',
-    #     'OPTIONS': {
-    #         'init_command': 'SET NAMES utf8, sql_mode="STRICT_TRANS_TABLES"',
-    #     },
-    #     'TEST': {
-    #         'CHARSET': 'utf8',
-    #         'COLLATION': 'utf8_general_ci',
-    #     }
-    # },
+    #    'ENGINE': 'None',
+    #    # 'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+    # }
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'raspberrypi',
+        'USER': 'root',
+        'PASSWORD': 'YzMyMzkzNmNjY2QxZDNkODI5ZTk4NzE0',
+        'HOST': '127.0.0.1',
+        'PORT': '3306',
+        'OPTIONS': {
+            'init_command': 'SET NAMES utf8, sql_mode="STRICT_TRANS_TABLES"',
+        },
+        'TEST': {
+            'CHARSET': 'utf8',
+            'COLLATION': 'utf8_general_ci',
+        }
+    },
 }
-connect(db='test', host='127.0.0.1',port=27017,username='mymongo',password='mymongo')
 
 # Password validation
 # https://docs.djangoproject.com/en/2.0/ref/settings/#auth-password-validators

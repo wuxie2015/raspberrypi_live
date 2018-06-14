@@ -6,7 +6,7 @@ import uuid
 
 # Create your models here.
 
-class temperatureRecorde(mongoengine.Document):
+class temperatureRecorde(models.Model):
     id = mongoengine.UUIDField('uuid',primary_key=True, default=uuid.uuid4)
     temperature = models.IntegerField('当前温度',null=True, default=0)
     createTime = models.DateTimeField('数据创建时间',
