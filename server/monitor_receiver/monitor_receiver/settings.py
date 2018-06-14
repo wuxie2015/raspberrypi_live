@@ -77,11 +77,7 @@ WSGI_APPLICATION = 'monitor_receiver.wsgi.application'
 # https://docs.djangoproject.com/en/2.0/ref/settings/#databases
 
 DATABASES = {
-    # 'default': {
-    #    'ENGINE': 'None',
-    #    # 'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-    # }
-    'default': {
+'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'raspberrypi',
         'USER': 'root',
@@ -150,14 +146,14 @@ LOGGING = {
         'file': {
             'level': 'INFO',
             'class': 'logging.FileHandler',
-            'filename': os.path.join(BASE_DIR, 'log/oms.log'),
+            'filename': os.path.join(BASE_DIR, 'log/monitor_receiver.log'),
             'formatter': 'standard'
         },
         'rotatingFile': {
             'level': 'INFO',
             #'class': 'logging.handlers.RotatingFileHandler',
             'class': 'logging.handlers.ConcurrentRotatingFileHandler',
-            'filename': os.path.join(BASE_DIR, 'log/oms.log'),
+            'filename': os.path.join(BASE_DIR, 'log/monitor_receiver.log'),
             'maxBytes': 1024 * 1024 * 20,
             'backupCount': 50,
             'formatter': 'standard'
@@ -165,7 +161,7 @@ LOGGING = {
         'timedRotatingFile': {
             'level': 'DEBUG',
             'class': 'logging.handlers.TimedRotatingFileHandler',
-            'filename': os.path.join(BASE_DIR, 'log/oms.log'),
+            'filename': os.path.join(BASE_DIR, 'log/monitor_receiver.log'),
             'when':'midnight',
             'interval': 1,
             'backupCount': 90,
@@ -183,58 +179,14 @@ LOGGING = {
             'propagate': True,
             'level': os.getenv('DJANGO_LOG_LEVEL', 'INFO')
         },
-        'auth': {
+        'temperature': {
             'handlers': ['rotatingFile'],
             'level': 'INFO'
         },
-        'auth_v2': {
+        'controll_agent': {
             'handlers': ['rotatingFile'],
             'level': 'INFO'
         },
-        'ci': {
-            'handlers': ['rotatingFile'],
-            'level': 'INFO'
-        },
-        'cmdb': {
-            'handlers': ['rotatingFile'],
-            'level': 'INFO'
-        },
-        'demo': {
-            'handlers': ['rotatingFile'],
-            'level': 'INFO'
-        },
-        'deployment': {
-            'handlers': ['rotatingFile'],
-            'level': 'INFO'
-        },
-        'lb': {
-            'handlers': ['rotatingFile'],
-            'level': 'INFO'
-        },
-        'oms': {
-            'handlers': ['rotatingFile'],
-            'level': 'INFO'
-        },
-        'operation': {
-            'handlers': ['rotatingFile'],
-            'level': 'INFO'
-        },
-        'report': {
-            'handlers': ['rotatingFile'],
-            'level': 'INFO'
-        },
-        'util': {
-            'handlers': ['rotatingFile'],
-            'level': 'INFO'
-        },
-        'weixin': {
-            'handlers': ['rotatingFile'],
-            'level': 'INFO'
-        },
-        'server_agent': {
-            'handlers': ['rotatingFile'],
-            'level': 'INFO'
-        }
     },
 }
 

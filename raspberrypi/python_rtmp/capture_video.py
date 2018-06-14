@@ -4,13 +4,11 @@ from python_push_rtmp import Writer
 import python_push_rtmp
 import librtmp
 from picamera import PiCamera
-import picamera
 import time
 import os
 from setting import HOST
 import logging
 from logging.handlers import RotatingFileHandler
-from io import BytesIO
 
 
 class VideoCapture:
@@ -22,13 +20,13 @@ class VideoCapture:
         log_file = 'capture_video.log'
         Rthandler = RotatingFileHandler(
             log_file, maxBytes=10 * 1024 * 1024, backupCount=5)
-        Rthandler.setLevel(logging.DEBUG)
+        Rthandler.setLevel(logging.ERROR)
         formatter = logging.Formatter(
             '\n%(asctime)s   %(filename)s[line:%(lineno)d]   %(levelname)s\n%(message)s')
         Rthandler.setFormatter(formatter)
         logger = logging.getLogger()
         logger.addHandler(Rthandler)
-        logger.setLevel(logging.DEBUG)
+        logger.setLevel(logging.ERROR)
         return logger
 
     def init_camera(self):
@@ -102,8 +100,6 @@ class VideoCapture:
         input: none
         output: none'''
 
-        time.sleep(2)
-
         while True:
             try:
                 camera = self.init_camera()
@@ -120,14 +116,15 @@ class VideoCapture:
                 camera.wait_recording(86400)
                 camera.stop_recording()
                 camera.close()
-            except Exception as e:
+            except BaseException as e:
                 self.logger.error(e)
                 try:
                     camera.stop_recording()
                     camera.close()
-                except Exception as e:
-                    pass
-                continue
+                except BaseException as e:
+                    break
+                else:
+                    continue
 
 
 if __name__ == '__main__':

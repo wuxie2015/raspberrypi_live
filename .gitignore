@@ -21,3 +21,4 @@ server/test_file
 *.lib
 *.obj
 *.o
+*setting.py*
