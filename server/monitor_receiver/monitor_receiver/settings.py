@@ -80,8 +80,8 @@ DATABASES = {
 'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'raspberrypi',
-        'USER': 'root',
-        'PASSWORD': 'YzMyMzkzNmNjY2QxZDNkODI5ZTk4NzE0',
+        'USER': 'raspberrypi',
+        'PASSWORD': 'raspberrypi',
         'HOST': '127.0.0.1',
         'PORT': '3306',
         'OPTIONS': {
