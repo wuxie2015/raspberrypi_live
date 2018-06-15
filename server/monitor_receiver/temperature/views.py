@@ -2,7 +2,7 @@
 import logging
 import traceback
 from django.http import Http404
-from temperature.models import temperatureRecorde
+from temperature.models import TemperatureRecorde
 from temperature.temperatureSerializer import temperatureSerializer
 from rest_framework.response import Response
 from rest_framework import status
@@ -18,15 +18,18 @@ class temperatureList(generics.ListCreateAPIView,
                   mixins.CreateModelMixin
                   ):
 
-    queryset = temperatureRecorde.objects.all()
+    queryset = TemperatureRecorde.objects.all()
     serializer_class = temperatureSerializer
 
     def get(self, request, *args, **kwargs):
         try:
             start_time_list = request.GET.get('start_timestamp',None)
-            timeArray = time.localtime(start_time_list)
-            time_obj = time.strftime("%Y-%m-%d %H:%M:%S", timeArray)
-            self.queryset = temperatureRecorde.objects.filter(createTime__gt = time_obj)
+            if start_time_list:
+                timeArray = time.localtime(start_time_list)
+                time_obj = time.strftime("%Y-%m-%d %H:%M:%S", timeArray)
+                self.queryset = TemperatureRecorde.objects.filter(createTime__gt = time_obj)
+            else:
+                self.queryset = TemperatureRecorde.objects.all()
             return self.list(request, *args, **kwargs)
         except BaseException as e:
             logger.error(traceback.format_exc())
@@ -44,14 +47,14 @@ class temperatureList(generics.ListCreateAPIView,
 
 
 class temperatureDetail(generics.RetrieveUpdateDestroyAPIView):
-    queryset = temperatureRecorde.objects.all()
+    queryset = TemperatureRecorde.objects.all()
     serializer_class = temperatureSerializer
 
     def get_object(self):
         try:
             timeArray = time.localtime(self.timestamp)
             time_obj = time.strftime("%Y-%m-%d %H:%M:%S", timeArray)
-            result = temperatureRecorde.objects.filter(createTime=time_obj).first()
+            result = TemperatureRecorde.objects.filter(createTime=time_obj).first()
             del self.timestamp
             return result
         except BaseException:
