@@ -142,6 +142,30 @@ class ChatServer(threading.Thread):
         while True:
             # Get the list sockets which are ready to be read through select
             try:
+<<<<<<< HEAD
+                read_sockets, write_sockets, error_sockets = select.select(
+                    CONNECTION_LIST, [], [])
+            except BaseException as e:
+                print("Error in socket_handle %s"%e)
+                self.logger.error("Error in socket_handle %s"%e)
+                continue
+            for sock in read_sockets:
+                # New connection
+                if sock == self.serverSocket:  # 用户通过主socket（即服务器开始创建的 socket，一直处于监听状态）来登录
+                    # Handle the case in which there is a new connection
+                    # recieved through server_socket
+                    sockfd, addr = self.serverSocket.accept()
+                    login_data = sockfd.recv(100)
+                    try:
+                        self.login(login_data, sockfd)
+                    except ValueError:
+                        break
+                else:
+                    try:
+                        self.chat(sock)
+                    except ValueError:
+                        continue
+=======
                 try:
                     read_sockets, write_sockets, error_sockets = select.select(
                         CONNECTION_LIST, [], [])
@@ -168,6 +192,7 @@ class ChatServer(threading.Thread):
             except BaseException as e:
                 print("Error in socket_handle %s" % e)
                 self.logger.error("Error in socket_handle %s" % e)
+>>>>>>> bc2ebfe5aed7998f7b62599c1143004cc214b7e5
 
     def run(self):
         self.socet_handle()

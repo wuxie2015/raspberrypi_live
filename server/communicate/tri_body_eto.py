@@ -4,6 +4,10 @@ import os
 import logging
 from logging.handlers import RotatingFileHandler
 from setting import PASSWORD
+<<<<<<< HEAD
+import json
+=======
+>>>>>>> bc2ebfe5aed7998f7b62599c1143004cc214b7e5
 
 
 
@@ -22,6 +26,19 @@ def logger_init():
 def call_back_fun(data):
     logger = logger_init()
     logger.info("recieved data %s"%data)
+<<<<<<< HEAD
+    try:
+        data_dict = json.loads(data)
+    except BaseException as e:
+        data_dict = {}
+        logger.error(e.args)
+        return None
+    else:
+        temperature = data_dict['temperature']
+        return temperature
+
+=======
+>>>>>>> bc2ebfe5aed7998f7b62599c1143004cc214b7e5
     # try:
     #     remote_id = data.split('||')[0]
     #     command = data.split('||')[1]

@@ -50,12 +50,12 @@ class temperatureDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = TemperatureRecorde.objects.all()
     serializer_class = temperatureSerializer
 
-    def get_object(self):
+    def get_object(self,**kwargs):
         try:
             timeArray = time.localtime(self.timestamp)
             time_obj = time.strftime("%Y-%m-%d %H:%M:%S", timeArray)
-            result = TemperatureRecorde.objects.filter(createTime=time_obj).first()
-            del self.timestamp
+            temperature_id = kwargs['temperature_id']
+            result = TemperatureRecorde.objects.filter(id=temperature_id).first()
             return result
         except BaseException:
             logger.error(traceback.format_exc())
@@ -63,8 +63,8 @@ class temperatureDetail(generics.RetrieveUpdateDestroyAPIView):
 
     def get(self, request, *args, **kwargs):
         try:
-            self.timestamp = kwargs['timestamp']
-            temps = self.get_object()
+            temperature_id = kwargs['temperature_id']
+            temps = self.get_object(temperature_id=temperature_id)
             temp_serialized = temperatureSerializer(temps)
             return Response(temp_serialized.data)
         except BaseException as e:
@@ -74,8 +74,8 @@ class temperatureDetail(generics.RetrieveUpdateDestroyAPIView):
 
     def put(self, request, *args, **kwargs):
         try:
-            self.timestamp = kwargs['timestamp']
-            temps = self.get_object()
+            temperature_id = kwargs['temperature_id']
+            temps = self.get_object(temperature_id=temperature_id)
             try:
                 serializer = temperatureSerializer(temps)
             except ValueError as e:
@@ -94,10 +94,10 @@ class temperatureDetail(generics.RetrieveUpdateDestroyAPIView):
 
     def patch(self, request, *args, **kwargs):
         try:
-            self.timestamp = kwargs['timestamp']
-            instance = self.get_object()
+            temperature_id = kwargs['temperature_id']
+            temps = self.get_object(temperature_id=temperature_id)
             try:
-                serializer = self.get_serializer(instance, partial=True)
+                serializer = self.get_serializer(temps, partial=True)
             except ValueError as e:
                 logger.error(traceback.format_exc())
                 return Response(
@@ -114,8 +114,8 @@ class temperatureDetail(generics.RetrieveUpdateDestroyAPIView):
 
     def delete(self, request, *args, **kwargs):
         try:
-            self.timestamp = kwargs['timestamp']
-            temps = self.get_object()
+            temperature_id = kwargs['temperature_id']
+            temps = self.get_object(temperature_id=temperature_id)
             self.perform_destroy(temps)
             return Response(status=status.HTTP_204_NO_CONTENT)
         except BaseException as e:
