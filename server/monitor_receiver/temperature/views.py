@@ -23,7 +23,7 @@ class temperatureList(generics.ListCreateAPIView,
 
     def get(self, request, *args, **kwargs):
         try:
-            start_time_list = request.GET.get('start_timestamp',None)
+            start_time_list = request.data.get('start_timestamp',None)
             if start_time_list:
                 timeArray = time.localtime(start_time_list)
                 time_obj = time.strftime("%Y-%m-%d %H:%M:%S", timeArray)
@@ -52,8 +52,6 @@ class temperatureDetail(generics.RetrieveUpdateDestroyAPIView):
 
     def get_object(self,**kwargs):
         try:
-            timeArray = time.localtime(self.timestamp)
-            time_obj = time.strftime("%Y-%m-%d %H:%M:%S", timeArray)
             temperature_id = kwargs['temperature_id']
             result = TemperatureRecorde.objects.filter(id=temperature_id).first()
             return result
