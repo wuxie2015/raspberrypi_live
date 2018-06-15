@@ -38,7 +38,7 @@ class TemperatureTest(TestCase):
             content_type='application/json')
         try:
             self.assertEqual(response.status_code, 201)
-            response_content = response.data['data'][0]
+            response_content = response.data
             for key in default_create:
                 self.assertEqual(
                     type(
@@ -55,14 +55,15 @@ class TemperatureTest(TestCase):
             "/temperature/templist/%s" %self.temperature_id)
         try:
             self.assertEqual(response.status_code, 200)
-            self.assertEqual(len(response.data['data']),1)
-            response_content = response.data['data'][0]
+            #self.assertEqual(len(response.data),1)
+            response_content = response.data
             for key in self.default_create_data:
-                self.assertEqual(
-                    type(
-                        self.default_create_data[key])(
-                        response_content[key]),
-                    self.default_create_data[key])
+                if not key == 'createTime':
+                    self.assertEqual(
+                        type(
+                            self.default_create_data[key])(
+                            response_content[key]),
+                        self.default_create_data[key])
         except AssertionError as e:
             print('Ops in test_get')
             print(response.data)
@@ -78,7 +79,7 @@ class TemperatureTest(TestCase):
             content_type='application/json')
         try:
             self.assertEqual(response.status_code, 200)
-            response_content = response.data['data'][0]
+            response_content = response.data
             for key in default_put:
                 self.assertEqual(
                     type(
@@ -100,7 +101,7 @@ class TemperatureTest(TestCase):
             content_type='application/json')
         try:
             self.assertEqual(response.status_code, 200)
-            response_content = response.data['data'][0]
+            response_content = response.data
             for key in default_put:
                 self.assertEqual(
                     type(

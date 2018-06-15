@@ -75,7 +75,7 @@ class temperatureDetail(generics.RetrieveUpdateDestroyAPIView):
             temperature_id = kwargs['temperature_id']
             temps = self.get_object(temperature_id=temperature_id)
             try:
-                serializer = temperatureSerializer(temps)
+                serializer = temperatureSerializer(instance=temps,data=request.data)
             except ValueError as e:
                 logger.error(traceback.format_exc())
                 return Response(
@@ -95,7 +95,7 @@ class temperatureDetail(generics.RetrieveUpdateDestroyAPIView):
             temperature_id = kwargs['temperature_id']
             temps = self.get_object(temperature_id=temperature_id)
             try:
-                serializer = self.get_serializer(temps, partial=True)
+                serializer = self.get_serializer(instance=temps, data=request.data, partial=True)
             except ValueError as e:
                 logger.error(traceback.format_exc())
                 return Response(
