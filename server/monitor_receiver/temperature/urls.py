@@ -20,7 +20,7 @@ schema_view = get_schema_view(
 urlpatterns = [
     url(r'doc$', schema_view, name="docs"),
     url(r'templist$', views_cmp_host.temperatureList.as_view()),
-    url(r'templist$/(?P<timestamp>[A-Za-z0-9\-]+)/?$', views_cmp_host.temperatureDetail.as_view()),
+    url(r'templist/(?P<temperature_id>[^/]+)$', views_cmp_host.temperatureDetail.as_view()),
 ]
 
 urlpatterns = format_suffix_patterns(urlpatterns)
