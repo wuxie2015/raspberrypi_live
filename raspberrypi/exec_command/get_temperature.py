@@ -108,7 +108,7 @@ def main(channel):
             reinit(channel)
         post_request(result_dict)
 
-def post_request(data,url="http://%s/temperature/templist"%HOST):
+def post_request(data,url="http://%s:/temperature/templist"%HOST):
     data_urlencode = urllib.urlencode(data)
     req = urllib2.Request(url=url, data=data_urlencode)
 

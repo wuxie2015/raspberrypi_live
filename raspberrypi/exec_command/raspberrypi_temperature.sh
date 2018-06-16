@@ -2,13 +2,14 @@
 BASE_DIR="/usr/local/project/raspberrypi_video/raspberrypi/exec_command/"
 SCRIPT_NAME="get_temperature.py"
 SCRIPT_PATH=$BASE_DIR$SCRIPT_NAME
+CHANNEL=29
 
 start() {
     cd $BASE_DIR
     [ -f $SCRIPT_PATH ] || exit 5
 	pids=`ps -aux|grep $SCRIPT_NAME|grep -v grep|awk '{print $2}'`
     if [ ! ${pids} ];then
-		nohup python $SCRIPT_PATH > /dev/null 2>&1 &
+		nohup python $SCRIPT_PATH -c $CHANNEL > /dev/null 2>&1 &
 		retval=$?
 		echo start $SCRIPT_NAME success
 	else
