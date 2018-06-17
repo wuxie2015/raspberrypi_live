@@ -99,18 +99,22 @@ def main(channel):
     channel = int(channel)
     init(channel)
     while True:
-        result_dict = None
-        while result_dict is None:
-            data_list = get_data(channel)
-            result_dict = process_data(data_list)
-            time.sleep(2)
-            reinit(channel)
-        post_dict = {}
-        temperature = "%s.%s"%(result_dict['temperature'],result_dict['temperature_point'])
-        humidity = "%s.%s" % (result_dict['humidity'], result_dict['humidity_point'])
-        post_dict['temperature'] = float(temperature)
-        post_dict['humidity'] = float(humidity)
-        post_request(post_dict)
+        try:
+            result_dict = None
+            while result_dict is None:
+                data_list = get_data(channel)
+                result_dict = process_data(data_list)
+                time.sleep(2)
+                reinit(channel)
+            post_dict = {}
+            temperature = "%s.%s"%(result_dict['temperature'],result_dict['temperature_point'])
+            humidity = "%s.%s" % (result_dict['humidity'], result_dict['humidity_point'])
+            post_dict['temperature'] = float(temperature)
+            post_dict['humidity'] = float(humidity)
+            post_request(post_dict)
+        except Exception as e:
+            print(e)
+            continue
 
 def post_request(data,url="http://%s/temperature/templist"%HOST):
     data_urlencode = urllib.urlencode(data)
