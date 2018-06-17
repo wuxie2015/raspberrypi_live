@@ -106,9 +106,14 @@ def main(channel):
             result_dict = process_data(data_list)
             time.sleep(2)
             reinit(channel)
-        post_request(result_dict)
+        post_dict = {}
+        temperature = "%s.%s"%(result_dict['temperature'],result_dict['temperature_point'])
+        humidity = "%s.%s" % (result_dict['humidity'], result_dict['humidity_point'])
+        post_dict['temperature'] = float(temperature)
+        post_dict['humidity'] = float(humidity)
+        post_request(post_dict)
 
-def post_request(data,url="http://%s:/temperature/templist"%HOST):
+def post_request(data,url="http://%s/temperature/templist"%HOST):
     data_urlencode = urllib.urlencode(data)
     req = urllib2.Request(url=url, data=data_urlencode)
 

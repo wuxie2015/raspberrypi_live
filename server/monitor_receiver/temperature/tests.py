@@ -8,7 +8,8 @@ from temperature.models import TemperatureRecorde
 class TemperatureTest(TestCase):
     def setUp(self):
         temperature_obj_1 = TemperatureRecorde.objects.create(
-            temperature = 32
+            temperature = 32.1,
+            humidity=32.0
         )
         temperature_obj_1.save()
         self.default_create_data = temperature_obj_1.to_dict()
@@ -30,7 +31,8 @@ class TemperatureTest(TestCase):
 
     def test_create(self):
         default_create = {
-            'temperature': 33
+            'temperature': 33.2,
+            'humidity': 32.0,
         }
         response = self.client.post(
             '/temperature/templist',
@@ -71,7 +73,8 @@ class TemperatureTest(TestCase):
 
     def test_put(self):
         default_put = {
-            'temperature': 32
+            'temperature': 31.1,
+            'humidity': 32.3,
         }
         response = self.client.put(
             "/temperature/templist/%s" %self.temperature_id,
