@@ -5,7 +5,7 @@ import uuid
 # Create your models here.
 
 class TemperatureRecorde(models.Model):
-    id = models.UUIDField('uuid',primary_key=True, default=uuid.uuid4)
+    id = models.AutoField(primary_key=True)
     temperature = models.FloatField('当前温度',null=True, default=0)
     humidity = models.FloatField('当前湿度',null=True, default=0)
     createTime = models.DateTimeField('数据创建时间',
