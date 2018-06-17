@@ -43,7 +43,6 @@ def get_data(channel):
             if gpio.micros() - tc > 500:  # 如果超过500us就结束了本次循环,传输结束后
                 break  # 会被上拉电阻拉成高电平，防止进入死循环
         tl.append(gpio.micros() - tc)  # 记录每个周期时间的us数，存到tl这个列表
-    print(tl)
     return tl
 
 
@@ -82,8 +81,8 @@ def process_data(data_tuple_list):
         check = check + check_bit[i] * (2 ** (7 - i))
 
     tmp = humidity + humidity_point + temperature + temperature_point
-    print("humidity %s.%s temperature %s.%s" %
-          (humidity, humidity_point, temperature, temperature_point))
+    # print("humidity %s.%s temperature %s.%s" %
+    #       (humidity, humidity_point, temperature, temperature_point))
     if tmp%256 == check:
         result_dict = {
             'humidity': humidity,
