@@ -47,6 +47,8 @@ class VideoCapture:
         camera.rotation = int(rotation)
         camera.framerate = framerate
         camera.brightness = brightness
+        camera.exposure_mode = 'auto'
+        camera.awb_mode = 'auto'
         return camera
 
     def gen_file_name(self):
