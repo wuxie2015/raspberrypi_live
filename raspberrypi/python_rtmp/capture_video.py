@@ -7,7 +7,7 @@ import python_push_rtmp
 import os
 from picamera import PiCamera
 from python_push_rtmp import Writer
-from setting import HOST
+from setting import HOST,PORT
 from logging.handlers import RotatingFileHandler
 
 class VideoCapture:
@@ -58,7 +58,7 @@ class VideoCapture:
 
     def init_rtmp(self):
         conn = librtmp.RTMP(
-            "rtmp://%s:1935/live/livestream" % HOST,  # 推流地址
+            "rtmp://%s:%s/live/livestream" % (HOST,PORT),  # 推流地址
             live=True)
         librtmp.librtmp.RTMP_EnableWrite(conn.rtmp)
         conn.connect()
