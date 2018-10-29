@@ -41,6 +41,7 @@ watch_dog(){
         echo $SCRIPT_NAME is running
     else
         restart
+    fi
 }
 
 case "$1" in
