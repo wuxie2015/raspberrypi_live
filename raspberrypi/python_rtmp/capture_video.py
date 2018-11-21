@@ -1,16 +1,16 @@
 #! /usr/bin/python
 # -*- coding: utf-8 -*-
-from python_push_rtmp import Writer
-import python_push_rtmp
 import librtmp
-from picamera import PiCamera
 import time
+import python_push_rtmp
 import os
-from setting import HOST
 import logging
 import traceback
+from setting import HOST
+from setting import PORT
+from picamera import PiCamera
+from python_push_rtmp import Writer
 from logging.handlers import RotatingFileHandler
-
 
 class VideoCapture:
     def __init__(self):
@@ -60,7 +60,7 @@ class VideoCapture:
 
     def init_rtmp(self):
         conn = librtmp.RTMP(
-            "rtmp://%s:1935/live/livestream" % HOST,  # 推流地址
+            "rtmp://%s:%s/live/livestream" % (HOST,PORT),  # 推流地址
             live=True)
         librtmp.librtmp.RTMP_EnableWrite(conn.rtmp)
         conn.connect()
@@ -119,6 +119,7 @@ class VideoCapture:
                 camera.wait_recording(86400)
                 camera.stop_recording()
                 camera.close()
+                feed_dog()
             except BaseException as e:
                 self.logger.error(e)
                 self.logger.error(traceback.format_exc())
@@ -129,6 +130,11 @@ class VideoCapture:
                     break
                 else:
                     continue
+
+def feed_dog():
+    with open("watchdog_record.txt","w") as f:
+        cur_time = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
+        f.write(cur_time)
 
 
 if __name__ == '__main__':

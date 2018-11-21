@@ -32,11 +32,15 @@ restart() {
     start
 }
 watch_dog(){
-    pids=`ps -aux|grep $SCRIPT_NAME|grep -v grep|awk '{print $2}'`
-    if [ ${pids} ];then
+    time=`sed -n "1p" watchdog_record.txt`
+    timeStamp=`date -d "$time" +%s`
+    current=`date "+%Y-%m-%d %H:%M:%S"`
+    currentTimeStamp=`date -d "$current" +%s`
+    timeDelta=$[$currentTimeStamp-$timeStamp]
+    if [ $timeDelta -lt 300 ];then
         echo $SCRIPT_NAME is running
     else
-        start
+        restart
     fi
 }
 
