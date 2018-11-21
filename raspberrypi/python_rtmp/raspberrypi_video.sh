@@ -37,7 +37,7 @@ watch_dog(){
     current=`date "+%Y-%m-%d %H:%M:%S"`
     currentTimeStamp=`date -d "$current" +%s`
     timeDelta=$[$currentTimeStamp-$timeStamp]
-    if [ $timeDelta -lt 300 ];then
+    if [ $timeDelta -lt 50000 ];then
         echo $SCRIPT_NAME is running
     else
         restart
