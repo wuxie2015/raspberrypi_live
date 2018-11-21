@@ -8,6 +8,7 @@ import time
 import os
 from setting import HOST
 import logging
+import traceback
 from logging.handlers import RotatingFileHandler
 
 
@@ -35,7 +36,7 @@ class VideoCapture:
         brightness = int(os.getenv('VIDEO_BRIGHTNESS', 70))
         width = int(os.getenv('VIDEO_WIDTH', 640))
         hight = int(os.getenv('VIDEO_HIGHT', 480))
-        rotation = int(os.getenv('VIDEO_ROTATION', 180))
+        rotation = int(os.getenv('VIDEO_ROTATION', 0))
         framerate = int(os.getenv('VIDEO_FRAMERATE', 25))
         self.logger.info('brightness %s' % brightness)
         self.logger.info('width %s' % width)
@@ -120,6 +121,7 @@ class VideoCapture:
                 camera.close()
             except BaseException as e:
                 self.logger.error(e)
+                self.logger.error(traceback.format_exc())
                 try:
                     camera.stop_recording()
                     camera.close()

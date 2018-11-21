@@ -22,3 +22,5 @@ server/test_file
 *.obj
 *.o
 *setting.py*
+*/setting.py
+*migrations*
