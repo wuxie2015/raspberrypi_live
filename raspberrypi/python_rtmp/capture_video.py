@@ -3,10 +3,12 @@
 import librtmp
 import time
 import os
+import traceback
 from picamera import PiCamera
 from raspberrypi.python_rtmp.python_push_rtmp import Writer,get_meta_string,get_property_string,get_meta_double
 from raspberrypi.python_rtmp.setting import HOST,PORT
 from raspberrypi.python_rtmp.logger import Logger
+from python_push_rtmp import Writer
 
 
 class VideoCapture:
@@ -91,19 +93,18 @@ class VideoCapture:
                 camera = self.init_camera()
                 start_time = time.time()
                 (conn, meta_packet, stream_rtmp) = self.init_rtmp()
-                # camera.start_preview()
                 Writer_obj = Writer(conn, meta_packet, start_time)
-                # Writer_obj = librtmp.RTMPStream(conn)
                 camera.start_recording(
                     Writer_obj,
                     format='h264',
                     intra_period=25,
                     quality=25)  # 开始录制，数据输出到Writer的对象里,quality从10到40,40最低
-                camera.wait_recording(86400)
+                camera.wait_recording(43200)
                 camera.stop_recording()
                 camera.close()
             except BaseException as e:
                 self.logger.error(e)
+                self.logger.error(traceback.format_exc())
                 try:
                     camera.stop_recording()
                     camera.close()

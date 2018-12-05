@@ -2,13 +2,14 @@
 BASE_DIR="/usr/local/project/raspberrypi_video/raspberrypi/python_rtmp/"
 SCRIPT_NAME="capture_video.py"
 SCRIPT_PATH=$BASE_DIR$SCRIPT_NAME
+WATCHDOG_FILE="watchdog_record.txt"
 
 start() {
     cd $BASE_DIR
     [ -f $SCRIPT_PATH ] || exit 5
 	pids=`ps -aux|grep $SCRIPT_NAME|grep -v grep|awk '{print $2}'`
     if [ ! ${pids} ];then
-		nohup python $SCRIPT_PATH > /dev/null 2>&1 &
+		nohup python3.6 $SCRIPT_PATH > /dev/null 2>&1 &
 		retval=$?
 		echo start $SCRIPT_NAME success
 	else
@@ -32,7 +33,7 @@ restart() {
     start
 }
 watch_dog(){
-    time=`sed -n "1p" watchdog_record.txt`
+    time=`sed -n "1p" $BASE_DIR$WATCHDOG_FILE`
     timeStamp=`date -d "$time" +%s`
     current=`date "+%Y-%m-%d %H:%M:%S"`
     currentTimeStamp=`date -d "$current" +%s`
@@ -41,6 +42,7 @@ watch_dog(){
         echo $SCRIPT_NAME is running
     else
         restart
+    fi
 }
 
 case "$1" in
