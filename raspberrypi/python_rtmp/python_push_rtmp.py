@@ -1,9 +1,11 @@
 # -- coding: utf-8 --
 # http://blog.csdn.net/luhanglei
 import time
-import traceback
 import ctypes
-from librtmp import *
+from raspberrypi.python_rtmp.feeddog import feed_dog
+from raspberrypi.python_rtmp.logger import Logger
+from librtmp import RTMPStream,RTMPPacket,PACKET_SIZE_MEDIUM
+from librtmp import PACKET_TYPE_VIDEO,PACKET_SIZE_LARGE
 
 # global meta_packet
 # global start_time
@@ -22,9 +24,11 @@ class Writer(RTMPStream):  # camera可以通过一个类文件的对象来输出
         self.conn = conn
         self.start_time = start_time
         self.meta_packet = meta_packet
+        self.logger = Logger.get_logger()
 
     def write(self, data):
         try:
+            feed_dog()
             # 寻找h264帧间隔符
             indexs = []
             index = 0
@@ -98,8 +102,8 @@ class Writer(RTMPStream):  # camera可以通过一个类文件的对象来输出
 
                 self.conn.send_packet(self.meta_packet, queue=True)
                 self.conn.send_packet(body_packet, queue=True)
-        except Exception, e:
-            traceback.print_exc()
+        except Exception as e:
+            self.logger.critical(e)
 
     def flush(self):
         pass
