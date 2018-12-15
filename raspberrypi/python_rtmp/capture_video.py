@@ -2,33 +2,17 @@
 # -*- coding: utf-8 -*-
 import librtmp
 import time
-import raspberrypi.python_rtmp.python_push_rtmp as python_push_rtmp
 import os
-import logging
 import traceback
-from raspberrypi.python_rtmp.setting import HOST
-from raspberrypi.python_rtmp.setting import PORT
 from picamera import PiCamera
-from raspberrypi.python_rtmp.python_push_rtmp import Writer
-from logging.handlers import RotatingFileHandler
+from raspberrypi.python_rtmp.python_push_rtmp import Writer,get_meta_string,get_property_string,get_meta_double
+from raspberrypi.python_rtmp.setting import HOST,PORT
+from raspberrypi.python_rtmp.logger import Logger
+
 
 class VideoCapture:
     def __init__(self):
-        self.logger = self.logger_init()
-
-    def logger_init(self):
-        # 定义一个RotatingFileHandler，最多备份5个日志文件，每个日志文件最大10M
-        log_file = 'capture_video.log'
-        Rthandler = RotatingFileHandler(
-            log_file, maxBytes=10 * 1024 * 1024, backupCount=5)
-        Rthandler.setLevel(logging.ERROR)
-        formatter = logging.Formatter(
-            '\n%(asctime)s   %(filename)s[line:%(lineno)d]   %(levelname)s\n%(message)s')
-        Rthandler.setFormatter(formatter)
-        logger = logging.getLogger()
-        logger.addHandler(Rthandler)
-        logger.setLevel(logging.ERROR)
-        return logger
+        self.logger = Logger.get_logger()
 
     def init_camera(self):
         '''input: nothing
@@ -36,7 +20,7 @@ class VideoCapture:
         brightness = int(os.getenv('VIDEO_BRIGHTNESS', 70))
         width = int(os.getenv('VIDEO_WIDTH', 640))
         hight = int(os.getenv('VIDEO_HIGHT', 480))
-        rotation = int(os.getenv('VIDEO_ROTATION', 0))
+        rotation = int(os.getenv('VIDEO_ROTATION', 90))
         framerate = int(os.getenv('VIDEO_FRAMERATE', 25))
         self.logger.info('brightness %s' % brightness)
         self.logger.info('width %s' % width)
@@ -65,26 +49,26 @@ class VideoCapture:
         librtmp.librtmp.RTMP_EnableWrite(conn.rtmp)
         conn.connect()
         # 拼装视频格式的数据包
-        meta_body_array = [python_push_rtmp.get_meta_string('@setDataFrame'), python_push_rtmp.get_meta_string('onMetaData'),
+        meta_body_array = [get_meta_string('@setDataFrame'), get_meta_string('onMetaData'),
                            bytes(bytearray([0x08, 0x00, 0x00, 0x00, 0x06])),
                            # 两个字符串和ECMA array头，共计6个元素,注释掉了音频相关数据
-                           python_push_rtmp.get_property_string(
-                               'width'), python_push_rtmp.get_meta_double(640.0),
-                           python_push_rtmp.get_property_string(
-                               'height'), python_push_rtmp.get_meta_double(480.0),
-                           python_push_rtmp.get_property_string(
-                               'videodatarate'), python_push_rtmp.get_meta_double(0.0),
-                           python_push_rtmp.get_property_string(
-                               'framerate'), python_push_rtmp.get_meta_double(25.0),
-                           python_push_rtmp.get_property_string(
-                               'videocodecid'), python_push_rtmp.get_meta_double(7.0),
+                           get_property_string(
+                               'width'), get_meta_double(640.0),
+                           get_property_string(
+                               'height'), get_meta_double(480.0),
+                           get_property_string(
+                               'videodatarate'), get_meta_double(0.0),
+                           get_property_string(
+                               'framerate'), get_meta_double(25.0),
+                           get_property_string(
+                               'videocodecid'), get_meta_double(7.0),
                            # get_property_string('audiodatarate'), get_meta_double(125.0),
                            # get_property_string('audiosamplerate'), get_meta_double(44100.0),
                            # get_property_string('audiosamplesize'), get_meta_double(16.0),
                            # get_property_string('stereo'), get_meta_boolean(True),
                            # get_property_string('audiocodecid'), get_meta_double(10.0),
-                           python_push_rtmp.get_property_string(
-                               'encoder'), python_push_rtmp.get_meta_string('Lavf57.56.101'),
+                           get_property_string(
+                               'encoder'), get_meta_string('Lavf57.56.101'),
                            bytes(bytearray([0x00, 0x00, 0x09]))
                            ]
         meta_body = ''.join(meta_body_array)
@@ -124,16 +108,9 @@ class VideoCapture:
                     camera.stop_recording()
                     camera.close()
                 except BaseException as e:
-                    scream()
-                    break
+                    self.logger.critical(e)
                 else:
                     continue
-
-def scream():
-    with open("watchdog_record.txt","w") as f:
-        cur_time = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
-        f.write(cur_time)
-
 
 if __name__ == '__main__':
     vc_obj = VideoCapture()
