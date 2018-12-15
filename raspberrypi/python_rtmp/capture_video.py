@@ -2,14 +2,14 @@
 # -*- coding: utf-8 -*-
 import librtmp
 import time
-import python_push_rtmp
+import raspberrypi.python_rtmp.python_push_rtmp as python_push_rtmp
 import os
 import logging
 import traceback
-from setting import HOST
-from setting import PORT
+from raspberrypi.python_rtmp.setting import HOST
+from raspberrypi.python_rtmp.setting import PORT
 from picamera import PiCamera
-from python_push_rtmp import Writer
+from raspberrypi.python_rtmp.python_push_rtmp import Writer
 from logging.handlers import RotatingFileHandler
 
 class VideoCapture:
@@ -117,7 +117,6 @@ class VideoCapture:
                 camera.wait_recording(43200)
                 camera.stop_recording()
                 camera.close()
-                feed_dog()
             except BaseException as e:
                 self.logger.error(e)
                 self.logger.error(traceback.format_exc())
@@ -125,11 +124,12 @@ class VideoCapture:
                     camera.stop_recording()
                     camera.close()
                 except BaseException as e:
+                    scream()
                     break
                 else:
                     continue
 
-def feed_dog():
+def scream():
     with open("watchdog_record.txt","w") as f:
         cur_time = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
         f.write(cur_time)
