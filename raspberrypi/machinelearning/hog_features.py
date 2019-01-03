@@ -1,3 +1,4 @@
+# -*- coding:utf-8 -*-
 #! /usr/bin/python
 import cv2
 import numpy as np
@@ -12,8 +13,9 @@ class Hog_descriptor():
     def __init__(self, img, cell_size=16, bin_count=8):
         self.img = img
         # 图像归一化
-        self.img = np.sqrt(img / np.max(img))
-        self.img = img * 255
+        # self.img = np.sqrt(img / np.max(img))
+        # self.img = img * 255
+        self.img = img
         self.cell_size = cell_size
         self.bin_count = bin_count# 总共多少个bin
         self.bin_size = math.floor(360 / self.bin_count)#每个bin的角度
@@ -137,6 +139,8 @@ class Hog_descriptor():
 
 if __name__ == '__main__':
     img = cv2.imread('person_037.png', cv2.IMREAD_GRAYSCALE)
+    img = np.sqrt(img / np.max(img))
+    img = img * 255
     hog = Hog_descriptor(img, cell_size=8, bin_count=8)
     vector, image = hog.main()
     print(np.array(vector).shape)
