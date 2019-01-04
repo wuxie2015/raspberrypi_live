@@ -1,5 +1,5 @@
-# -*- coding:utf-8 -*-
 #! /usr/bin/python
+# -*- coding:utf-8 -*-
 import cv2
 import numpy as np
 from raspberrypi.machinelearning.hog_features import Hog_descriptor
@@ -49,13 +49,13 @@ class HogPyramid:
                 xleft = xpos * self.cell_size
                 ytop = ypos * self.cell_size
 
-                test_prediction = svc.predict(hog_features)
+                # test_prediction = svc.predict(hog_features)
 
-                if test_prediction == 1:
-                    xbox_left = np.int(xleft * self.scale)
-                    ytop_draw = np.int(ytop * self.scale)
-                    win_draw = np.int(self.window_size * self.scale)
-                    windows.append(
-                        ((xbox_left, ytop_draw + 0), (xbox_left + win_draw, ytop_draw + win_draw + 0)))
+                # if test_prediction == 1:
+                #     xbox_left = np.int(xleft * self.scale)
+                #     ytop_draw = np.int(ytop * self.scale)
+                #     win_draw = np.int(self.window_size * self.scale)
+                #     windows.append(
+                #         ((xbox_left, ytop_draw + 0), (xbox_left + win_draw, ytop_draw + win_draw + 0)))
 
         return windows

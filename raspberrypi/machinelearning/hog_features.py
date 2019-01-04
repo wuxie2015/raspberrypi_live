@@ -1,5 +1,5 @@
-# -*- coding:utf-8 -*-
 #! /usr/bin/python
+# -*- coding:utf-8 -*-
 import cv2
 import numpy as np
 import math
@@ -15,7 +15,6 @@ class Hog_descriptor():
         # 图像归一化
         # self.img = np.sqrt(img / np.max(img))
         # self.img = img * 255
-        self.img = img
         self.cell_size = cell_size
         self.bin_count = bin_count# 总共多少个bin
         self.bin_size = math.floor(360 / self.bin_count)#每个bin的角度
@@ -101,7 +100,7 @@ class Hog_descriptor():
                     angle += angle_gap
         return image
 
-    def main(self):
+    def get_feature(self):
         height, width = self.img.shape
         #取得每个像素的梯度
         gradient_magnitude, gradient_angle = self.global_gradient()
@@ -135,14 +134,25 @@ class Hog_descriptor():
                     normalize = lambda block_vector, magnitude: [element / magnitude for element in block_vector]
                     block_vector = normalize(block_vector, magnitude)
                 hog_vector.append(block_vector)
-        return hog_vector, hog_image
+        return hog_vector
 
-if __name__ == '__main__':
-    img = cv2.imread('person_037.png', cv2.IMREAD_GRAYSCALE)
-    img = np.sqrt(img / np.max(img))
-    img = img * 255
-    hog = Hog_descriptor(img, cell_size=8, bin_count=8)
-    vector, image = hog.main()
-    print(np.array(vector).shape)
-    plt.imshow(image, cmap=plt.cm.gray)
-    plt.show()
+    def get_img_feature(self,target_pic_size):
+        img = self.img.astype(np.float32) / 255
+        scale = img.shape[1] / target_pic_size
+        img = cv2.resize(img, (np.int(img.shape[1] / scale), np.int(img.shape[0] / scale)))
+        img = np.sqrt(img / np.max(img))
+        self.img = img * 255
+        return self.get_feature()
+
+    def get_img(self):
+        return self.img
+
+# if __name__ == '__main__':
+#     img = cv2.imread('person_037.png', cv2.IMREAD_GRAYSCALE)
+#     img = np.sqrt(img / np.max(img))
+#     img = img * 255
+#     hog = Hog_descriptor(img, cell_size=8, bin_count=8)
+#     vector, image = hog.get_feature()
+#     print(np.array(vector).shape)
+#     plt.imshow(image, cmap=plt.cm.gray)
+#     plt.show()
