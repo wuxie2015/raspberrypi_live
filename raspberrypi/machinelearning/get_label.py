@@ -43,7 +43,7 @@ def mouse_click(press, release):
         print('-- Latest bounding box has been removed --')
 
 
-# 定义一个函数，用来在中途改变我    们要标记的物体
+# 定义一个函数，用来在中途改变我们要标记的物体
 def change_label(event):
     # 当需要对这些变量在函数里面被修改的时候，用上 global 会比较精确且保险
     global Label_name

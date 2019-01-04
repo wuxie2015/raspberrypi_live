@@ -1,4 +1,5 @@
 #! /usr/bin/python
+# -*- coding:utf-8 -*-
 import urllib.request as urst
 import re
 import os
@@ -8,10 +9,11 @@ from bs4 import BeautifulSoup as bs
 def get_pic(keywords):
     opener = urst.build_opener()
     header = ("User-Agent","Mozilla/5.0(Macintosh;Intel Max OS X 10.13;rv55.0 Gecko/20100101 Firefox/55.0)")
-    baiduSearch = "http://image.baidu.com/search/index?tn=baiduimage&ipn=r&ct=201326592&cl=2&lm=-1&st=-1&fm=result&fr=&sf=1&fmq=1545808688070_R&pv=&ic=&nc=1&z=&hd=&latest=&copyright=&se=1&showtab=0&fb=0&width=&height=&face=0&istype=2&ie=utf-8&word={}"
+    # baiduSearch = "http://image.baidu.com/search/index?tn=baiduimage&ipn=r&ct=201326592&cl=2&lm=-1&st=-1&fm=result&fr=&sf=1&fmq=1545808688070_R&pv=&ic=&nc=1&z=&hd=&latest=&copyright=&se=1&showtab=0&fb=0&width=&height=&face=0&istype=2&ie=utf-8&word={}"
+    baidu_url = "http://image.baidu.com/search/index?tn=baiduimage&ipn=r&ct=201326592&cl=2&lm=-1&st=-1&fm=result&fr=&sf=1&fmq=1546591055545_R&pv=&ic=&nc=1&z=&hd=&latest=&copyright=&se=1&showtab=0&fb=0&width=&height=&face=0&istype=2&ie=utf-8&word=%E9%A9%AC%E8%B7%AF"
     opener.addheaders = [header]
     # keywords = keywords.replace('','+')
-    baidu_url = baiduSearch.format(keywords)
+    # baidu_url = baiduSearch.format(keywords)
     data = opener.open(baidu_url).read()
     soup = bs(data,'lxml',from_encoding='utf-8')
     img_tags = soup.findAll('script', {'type': 'text/javascript'})
@@ -59,7 +61,7 @@ def save_images(links_list, keywords):
 
 # 如果呼叫的这些函数名字都是写在这个文档的函数，并非 import 进来的话，则运行；否则忽略
 if __name__ == '__main__':
-    keyword = 'flower'
+    keyword = 'road'
     # links_from_google = google_get_links(keyword)
     links_from_baidu = get_pic(keyword)
     save_images(links_from_baidu, keyword)
