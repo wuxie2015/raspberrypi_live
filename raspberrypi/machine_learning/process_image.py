@@ -47,3 +47,31 @@ def create_image_lists(sess,testing_percentage,validation_percentage):
                 image = tf.image.convert_image_dtype(image,tf.image.convert_image_dtype)
             image = tf.image.resize_images(image,(299,299))
             image_value = sess.run(image)
+
+            chance = np.random.randint(100)
+            if chance < validation_percentage:
+                validation_images.append(image_value)
+                validation_labels.append(current_label)
+            elif chance < (testing_percentage + validation_percentage):
+                testing_images.append(image_value)
+                testing_labels.append(current_label)
+            else:
+                training_images.append(image_value)
+                training_labels.append(current_label)
+        current_label += 1
+
+    #随机打乱
+    state = np.random.get_state()
+    np.random.shuffle(training_images)
+    np.random.shuffle(state)
+    np.random.shuffle(training_labels)
+
+    return np.asanyarray([training_images,training_labels,validation_images,testing_labels])
+
+def main():
+    with tf.Session as sess:
+        processed_data = create_image_lists(sess,TEST_PERCENTAGE,VALIDATION_PERCENTAGE)
+        np.save(OUTPUT_FILE,processed_data)
+
+if __name__ == '__main__':
+    main()
