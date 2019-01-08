@@ -104,7 +104,6 @@ class Writer(RTMPStream):  # camera可以通过一个类文件的对象来输出
                 self.conn.send_packet(body_packet, queue=True)
         except Exception as e:
             self.logger.critical(e)
-
     def flush(self):
         pass
 
@@ -134,7 +133,3 @@ def get_meta_boolean(isTrue):
     else:
         nums.append(0x00)
     return ''.join(bytes(bytearray(nums)))
-
-
-
-

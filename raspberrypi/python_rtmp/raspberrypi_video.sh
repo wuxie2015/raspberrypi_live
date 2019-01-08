@@ -42,6 +42,8 @@ watch_dog(){
         echo $SCRIPT_NAME is running
     else
         restart
+    else
+        echo $SCRIPT_NAME is running
     fi
 }
 

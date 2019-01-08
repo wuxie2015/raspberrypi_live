@@ -8,7 +8,6 @@ from picamera import PiCamera
 from raspberrypi.python_rtmp.python_push_rtmp import Writer,get_meta_string,get_property_string,get_meta_double
 from raspberrypi.python_rtmp.setting import HOST,PORT
 from raspberrypi.python_rtmp.logger import Logger
-from python_push_rtmp import Writer
 
 
 class VideoCapture:
@@ -112,7 +111,6 @@ class VideoCapture:
                     self.logger.critical(e)
                 else:
                     continue
-
 
 if __name__ == '__main__':
     vc_obj = VideoCapture()
