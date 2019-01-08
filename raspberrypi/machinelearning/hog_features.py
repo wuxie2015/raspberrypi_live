@@ -10,7 +10,7 @@ class Hog_descriptor():
     #先算出每个像素的幅值和方向
     #然后根据cell划分算出cell内每个像素在cell中bin方向上的投影幅值
     # 把相邻4个cell合成一个block做归一化，block在x、y方向每次只移动一个cell，故block之间相互重叠
-    def __init__(self, img, cell_size=16, bin_count=8):
+    def __init__(self, img, cell_size=16, bin_count=8,cell_perblock=2):
         self.img = img
         # 图像归一化
         # self.img = np.sqrt(img / np.max(img))
@@ -18,6 +18,7 @@ class Hog_descriptor():
         self.cell_size = cell_size
         self.bin_count = bin_count# 总共多少个bin
         self.bin_size = math.floor(360 / self.bin_count)#每个bin的角度
+        self.cell_perblock = cell_perblock
         assert type(self.bin_count) == int, "bin_count should be integer,"
         assert type(self.cell_size) == int, "cell_size should be integer,"
         assert 360 % self.bin_count == 0, "bin_size should be divisible by 360"
@@ -73,7 +74,7 @@ class Hog_descriptor():
         '''
         idx = int(gradient_angle / self.bin_size)# 第多少个bin
         mod = gradient_angle % self.bin_size
-        return idx, (idx + 1) % self.bin_count, mod
+        return idx%self.bin_count, (idx + 1) % self.bin_count, mod
 
     def render_gradient(self, image, cell_gradient):
         '''
@@ -118,16 +119,19 @@ class Hog_descriptor():
                 # 计算cell的角度和梯度
                 cell_gradient_vector[x][y] = self.cell_gradient(cell_magnitude, cell_angle)
 
-        hog_image = self.render_gradient(np.zeros([height, width]), cell_gradient_vector)
+        # self.hog_image = self.render_gradient(np.zeros([height, width]), cell_gradient_vector)
         hog_vector = []
         for x in range(cell_gradient_vector.shape[0] - 1):
             for y in range(cell_gradient_vector.shape[1] - 1):
                 block_vector = []
-                block_vector.extend(cell_gradient_vector[x][y])
-                block_vector.extend(cell_gradient_vector[x][y + 1])
-                block_vector.extend(cell_gradient_vector[x + 1][y])
-                block_vector.extend(cell_gradient_vector[x + 1][y + 1])
-                # 把相邻4个cell合成一个block做归一化，block在x、y方向每次只移动一个cell，故block之间相互重叠
+                # block_vector.extend(cell_gradient_vector[x][y])
+                # block_vector.extend(cell_gradient_vector[x][y + 1])
+                # block_vector.extend(cell_gradient_vector[x + 1][y])
+                # block_vector.extend(cell_gradient_vector[x + 1][y + 1])
+                for i in range(self.cell_perblock):
+                    for j in range(self.cell_perblock):
+                        block_vector.extend(cell_gradient_vector[x + i][y + j])
+                # 把相邻cell_perblock*cell_perblock个cell合成一个block做归一化，block在x、y方向每次只移动一个cell，故block之间相互重叠
                 mag = lambda vector: math.sqrt(sum(i ** 2 for i in vector))
                 magnitude = mag(block_vector)
                 if magnitude != 0:
@@ -138,8 +142,8 @@ class Hog_descriptor():
 
     def get_img_feature(self,target_pic_size):
         img = self.img.astype(np.float32) / 255
-        scale = img.shape[1] / target_pic_size
-        img = cv2.resize(img, (np.int(img.shape[1] / scale), np.int(img.shape[0] / scale)))
+        # scale = img.shape[1] / target_pic_size
+        img = cv2.resize(img, (np.int(target_pic_size), np.int(target_pic_size)))
         img = np.sqrt(img / np.max(img))
         self.img = img * 255
         return self.get_feature()
@@ -148,11 +152,12 @@ class Hog_descriptor():
         return self.img
 
 # if __name__ == '__main__':
-#     img = cv2.imread('person_037.png', cv2.IMREAD_GRAYSCALE)
+#     img = cv2.imread('test_images/b672637ebced7cb5ed3767e941c59c60.jpeg', cv2.IMREAD_GRAYSCALE)
 #     img = np.sqrt(img / np.max(img))
 #     img = img * 255
-#     hog = Hog_descriptor(img, cell_size=8, bin_count=8)
-#     vector, image = hog.get_feature()
+#     hog = Hog_descriptor(img, cell_size=2, bin_count=8,cell_perblock=2)
+#     vector = hog.get_feature()
+#     image = hog.hog_image
 #     print(np.array(vector).shape)
 #     plt.imshow(image, cmap=plt.cm.gray)
 #     plt.show()
