@@ -14,12 +14,12 @@ from hog_features import Hog_descriptor
 # 参考https://zhuanlan.zhihu.com/p/35607432
 
 class HogPyramid:
-    def __init__(self,img,initial_window_size=64,cells_per_step = 2):
-        self.img = img.astype(np.float32) / 255
+    def __init__(self,img,initial_window_size=64,blocks_per_step = 1):
+        self.img = img
         self.initial_window_size = initial_window_size
         # 重叠率overlap = ((windw_size/cell_size) - cells_per_step)/(windw_size/cell_size)
         # cells_per_step = (1 - overlap) * windw_size / cell_size
-        self.cells_per_step = cells_per_step
+        self.blocks_per_step = blocks_per_step
         self.svc,self.cell_size,self.cell_per_block,self.spatial_size,self.hist_bins = self.get_parameter()
 
     def get_parameter(self):
@@ -34,33 +34,46 @@ class HogPyramid:
     def split_image(self,window_size):
         # 窗口集合
         windows = []
-        # 各个方向上的cell数
+        # 各个方向上的block数
         nxblocks = (self.img.shape[1] // self.cell_size) - (self.cell_per_block - 1)  # -1
         nyblocks = (self.img.shape[0] // self.cell_size) - (self.cell_per_block - 1)  # -1
         # 每个window里面几个block
         nblocks_per_window = (window_size // self.cell_size) - (self.cell_per_block - 1)
-        # 滑窗移动多少步，最后window到头后就不再滑动，所以少一个window的距离
-        nxsteps = (nxblocks - nblocks_per_window) // self.cells_per_step
-        nysteps = (nyblocks - nblocks_per_window) // self.cells_per_step
+        # 滑窗移动多少步
+        nxsteps = (nxblocks//self.blocks_per_step) - (nblocks_per_window//self.blocks_per_step - 1)
+        nysteps = (nyblocks // self.blocks_per_step) - (nblocks_per_window // self.blocks_per_step - 1)
+
+        img = self.img.astype(np.float32) / 25
+        img = np.sqrt(img / np.max(img))
+        self.img = img * 255
         hog_descriptor = Hog_descriptor(self.img, self.cell_size, self.hist_bins, self.cell_per_block)
-        hog_features = hog_descriptor.get_feature()
+        _,hog_features_3d = hog_descriptor.get_feature()
+        count = 0
+        last_percentage = 0
         for xb in range(nxsteps):
             for yb in range(nysteps):
-                ypos = yb * self.cells_per_step * self.cell_size
-                xpos = xb * self.cells_per_step * self.cell_size
-                # Extract HOG for this patch
-                img_splited = img[xpos :xpos+window_size, ypos:ypos + window_size]
-                hog_splited = hog_features[yb * self.cells_per_step:yb * self.cells_per_step + nyblocks]
-                print(np.array(hog_splited).shape)
-                # hog_descriptor = Hog_descriptor(img_splited, self.cell_size, self.hist_bins, self.cell_per_block)
-                # hog_features = hog_descriptor.get_img_feature(self.spatial_size)
+                count = count + 1
+
+                percentage = (count / (nxsteps * nysteps))*100
+                if percentage - last_percentage > 1:
+                    print("completed %.2f%%"%percentage)
+                    last_percentage = percentage
+                ypos = yb * self.blocks_per_step * self.cell_per_block* self.cell_size
+                xpos = xb * self.blocks_per_step * self.cell_per_block* self.cell_size
+                hog_splited = hog_features_3d[yb * self.blocks_per_step : yb * self.blocks_per_step + nblocks_per_window]
+                hog_features_2d = []
                 result = []
-                for item in hog_splited:
+                for hog_y in hog_splited:
+                    hog_features_2d.extend(hog_y[xb * self.blocks_per_step:xb * self.blocks_per_step + nblocks_per_window])
+
+                for item in hog_features_2d:
                     result.extend(item)
                 xleft = xpos
                 ytop = ypos
-
-                test_prediction = self.svc.predict(np.array(result).reshape(1,-1))
+                try:
+                    test_prediction = self.svc.predict(np.array(result).reshape(1,-1))
+                except ValueError:
+                    test_prediction = 0
 
                 if test_prediction == 1:
                     xbox_left = np.int(xleft)
@@ -90,21 +103,21 @@ class HogPyramid:
         window_size = self.initial_window_size
         windows += (self.split_image(window_size))
         print(windows)
-        for window in windows:
-            top_left = window[0]
-            buttom_right = window[1]
-            top_right = (buttom_right[0],top_left[1])
-            buttom_left = (top_left[0],buttom_right[1])
-            cv2.line(draw_img, top_left, top_right, (0, 255, 0), 5)
-            cv2.line(draw_img, top_left, buttom_left, (0, 255, 0), 5)
-            cv2.line(draw_img, buttom_left, buttom_right, (0, 255, 0), 5)
-            cv2.line(draw_img, buttom_right, top_right, (0, 255, 0), 5)
+        # for window in windows:
+        #     top_left = window[0]
+        #     buttom_right = window[1]
+        #     top_right = (buttom_right[0],top_left[1])
+        #     buttom_left = (top_left[0],buttom_right[1])
+        #     cv2.line(draw_img, top_left, top_right, (0, 255, 0), 5)
+        #     cv2.line(draw_img, top_left, buttom_left, (0, 255, 0), 5)
+        #     cv2.line(draw_img, buttom_left, buttom_right, (0, 255, 0), 5)
+        #     cv2.line(draw_img, buttom_right, top_right, (0, 255, 0), 5)
 
-        # heat_map = np.zeros(self.img.shape[:2])
-        # heat_map = utils.add_heat(heat_map, windows)
-        # heat_map_thresholded = utils.apply_threshold(heat_map, 1)
-        # labels = label(heat_map_thresholded)
-        # draw_img = utils.draw_labeled_bboxes(draw_img, labels)
+        heat_map = np.zeros(self.img.shape[:2])
+        heat_map = utils.add_heat(heat_map, windows)
+        heat_map_thresholded = utils.apply_threshold(heat_map, 1)
+        labels = label(heat_map_thresholded)
+        draw_img = utils.draw_labeled_bboxes(draw_img, labels)
 
         return draw_img
 

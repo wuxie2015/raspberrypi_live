@@ -102,6 +102,7 @@ class Hog_descriptor():
         return image
 
     def get_feature(self):
+        hog_vector_3d = []
         height, width = self.img.shape
         #取得每个像素的梯度
         gradient_magnitude, gradient_angle = self.global_gradient()
@@ -119,9 +120,10 @@ class Hog_descriptor():
                 # 计算cell的角度和梯度
                 cell_gradient_vector[x][y] = self.cell_gradient(cell_magnitude, cell_angle)
 
-        # self.hog_image = self.render_gradient(np.zeros([height, width]), cell_gradient_vector)
+        self.hog_image = self.render_gradient(np.zeros([height, width]), cell_gradient_vector)
         hog_vector = []
         for x in range(cell_gradient_vector.shape[0] - 1):
+            hog_vector_2d = []
             for y in range(cell_gradient_vector.shape[1] - 1):
                 block_vector = []
                 # block_vector.extend(cell_gradient_vector[x][y])
@@ -138,7 +140,9 @@ class Hog_descriptor():
                     normalize = lambda block_vector, magnitude: [element / magnitude for element in block_vector]
                     block_vector = normalize(block_vector, magnitude)
                 hog_vector.append(block_vector)
-        return hog_vector
+                hog_vector_2d.append(block_vector)
+            hog_vector_3d.append(hog_vector_2d)
+        return hog_vector,hog_vector_3d
 
     def get_img_feature(self,target_pic_size):
         img = self.img.astype(np.float32) / 255
@@ -151,13 +155,14 @@ class Hog_descriptor():
     def get_img(self):
         return self.img
 
-# if __name__ == '__main__':
-#     img = cv2.imread('test_images/b672637ebced7cb5ed3767e941c59c60.jpeg', cv2.IMREAD_GRAYSCALE)
-#     img = np.sqrt(img / np.max(img))
-#     img = img * 255
-#     hog = Hog_descriptor(img, cell_size=2, bin_count=8,cell_perblock=2)
-#     vector = hog.get_feature()
-#     image = hog.hog_image
-#     print(np.array(vector).shape)
-#     plt.imshow(image, cmap=plt.cm.gray)
-#     plt.show()
+if __name__ == '__main__':
+    img = cv2.imread('test_images/image0000.png', cv2.IMREAD_GRAYSCALE)
+    img = img.astype(np.float32) / 255
+    img = np.sqrt(img / np.max(img))
+    img = img * 255
+    hog = Hog_descriptor(img, cell_size=2, bin_count=30,cell_perblock=2)
+    vector = hog.get_feature()
+    image = hog.hog_image
+    print(np.array(vector).shape)
+    plt.imshow(image, cmap=plt.cm.gray)
+    plt.show()
