@@ -1,0 +1,31 @@
+依赖软件：
+1、simple rtmp server(简称srs)：https://github.com/winlinvip/simple-rtmp-server
+使用方法：
+  服务端：
+    1、运行srs，可以把srs安装到/usr/local/srs这个目录下，然后运行sh base_elements.sh start启动基础组件
+    2、放到/usr/local/project/raspberrypi_video目录下
+    3、cd /usr/local/project/raspberrypi_video/server
+    4、sh base_elements.sh watchdog
+  树莓派：
+    1、切换到root用户
+    2、放到/usr/local/project/raspberrypi_video/目录下
+    3、在/usr/local/project/raspberrypi_video/raspberrypi/python_rtmp目录下建一个setting.py文件，文件内容如附件
+    3、在setting里面配置rabbitmq
+    4、cd /usr/local/project/raspberrypi_video/raspberrypi/python_rtmp;sh raspberrypi_video.sh start
+    5、在crontab中定时每四分钟运行sh raspberrypi_video.sh watchdog
+附件：
+setting.py
+# -*- coding: utf-8 -*-
+
+HOST = '*.*.*.*'
+PORT = *
+注意事项：
+服务端使用python3.6运行
+树莓派上使用python2.7运行
+
+Ps:
+1、树莓派端的python_hls为未完成项目，comminicate用户服务端重启摄像头，exec_command里面的关于temperature部分是基于DHT-11
+    读温度的，只写了树莓派端，服务端还没有完成，暂时工作忙没时间写了，如果哪位大侠有兴趣可以接茬写下去
+2、服务端的monitor_receiver就是尚未完成的温控服务端接收程序
+3、下一步的计划是用这个训练卷积神经网络，玩点高端的玩意儿
+4、如果有好的工作机会求介绍
