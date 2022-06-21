@@ -17,7 +17,7 @@ lxml==4.2.5
 Markdown==3.0.1
 matplotlib==3.0.2
 networkx==2.2
-numpy==1.15.4
+numpy==1.22.0
 opencv-python==3.4.4.19
 Pillow==5.4.0
 protobuf==3.6.1
